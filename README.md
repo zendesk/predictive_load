@@ -1,9 +1,14 @@
 predictive_load
 ===============
 
-Observes Active Record collections and notifies when a member loads an association. This allows for detecting N+1 ands automatically preloading the association in a single query for all members of that collection.
+Observes Active Record collections and notifies when a member loads an association. This allows for:
+* automatically preloading the association in a single query for all members of that collection.
+* N+1 detection logging 
 
-For example, the following code:
+
+
+### Automatic preloading
+
 
 ```ruby
 ActiveRecord::Relation.collection_observer = PredictiveLoad::Loader
@@ -20,6 +25,8 @@ Produces:
   SELECT `identities`.* FROM `identities` WHERE `identities`.`requester_id` IN (2, 7, 12, 32, 37)
   SELECT `accounts`.* FROM `accounts` WHERE `accounts`.`id` IN (1, 2, 3)
 ```
+
+### N+1 detection logging
 
 There is also a log-only version:
 ```ruby
@@ -47,7 +54,7 @@ would have prevented all 10 queries
 
 ```
 
-# Known limitations:
+#### Known limitations:
 
 * Calling association#size will trigger an N+1 on SELECT COUNT(*). Work around by calling #length, loading all records.
 * Calling first / last will trigger an N+1.
