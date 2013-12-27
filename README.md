@@ -1,11 +1,13 @@
 predictive_load
 ===============
 
-Automatically preload an association when any other member of a collection loads that association.
+Observes Active Record collections and notifies when a member loads an association. This allows for detecting N+1 ands automatically preloading the association in a single query for all members of that collection.
 
 For example, the following code:
 
 ```ruby
+ActiveRecord::Relation.collection_observer = PredictiveLoad::Loader
+
 Ticket.all.each do |ticket| 
   ticket.requester.identities.each { |identity| identity.account }
 end
@@ -17,6 +19,32 @@ Produces:
   SELECT `requesters`.* FROM `requesters` WHERE `requesters`.`id` IN (2, 7, 12, 32, 37)
   SELECT `identities`.* FROM `identities` WHERE `identities`.`requester_id` IN (2, 7, 12, 32, 37)
   SELECT `accounts`.* FROM `accounts` WHERE `accounts`.`id` IN (1, 2, 3)
+```
+
+There is also a log-only version:
+```ruby
+ActiveRecord::Relation.collection_observer = PredictiveLoad::Watcher
+
+Comment.all.each do |comment|
+  comment.account
+end
+
+```
+
+Produces:
+
+```
+detected n1 call on Comment#account
+expect to prevent 10 queries
+would preload with: SELECT `accounts`.* FROM `accounts`  WHERE `accounts`.`id` IN (...)
++----+-------------+----------+-------+---------------+---------+---------+-------+------+-------+
+| id | select_type | table    | type  | possible_keys | key     | key_len | ref   | rows | Extra |
++----+-------------+----------+-------+---------------+---------+---------+-------+------+-------+
+|  1 | SIMPLE      | accounts | const | PRIMARY       | PRIMARY | 4       | const |    10 |      |
++----+-------------+----------+-------+---------------+---------+---------+-------+------+-------+
+1 row in set (0.00 sec)
+would have prevented all 10 queries
+
 ```
 
 # Known limitations:
