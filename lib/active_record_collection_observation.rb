@@ -18,7 +18,7 @@ module PredictiveLoad::ActiveRecordCollectionObservation
       records = to_a_without_collection_observer
 
       if records.size > 1 && collection_observer
-        collection_observer.new(records.dup).observe
+        collection_observer.observe(record.dup)
       end
 
       records

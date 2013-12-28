@@ -25,23 +25,36 @@ module PredictiveLoad
     end
 
     def loading_association(record, association_name)
-      return if Rails.env.test? && association_name.to_s.index('_stub_')
+      return if !all_records_will_likely_load_association?(association_name)
 
-      if query_count = @loaded_associations[association_name]
-        log("detected n1 call on #{records.first.class.name}##{association_name}")
-
-        if query_count == 1
-          log("expect to prevent #{expected_query_count} queries")
-          log_preload(association_name)
-        end
-
-        if query_count == expected_query_count
-          log("would have prevented all #{expected_query_count} queries")
-        end
+      if loaded_associations.key?(association_name)
+        log_query_plan(association_name)
       end
 
-      @loaded_associations[association_name] ||= 0
-      @loaded_associations[association_name] += 1
+      increment_query_count(association_name)
+    end
+
+    protected
+
+    def log_query_plan(association_name)
+      log("detected n1 call on #{records.first.class.name}##{association_name}")
+
+      # Detailed logging for first query
+      if query_count == 1
+        log("expect to prevent #{expected_query_count} queries")
+        log_preload(association_name)
+      end
+
+      # All records loaded association
+      if query_count == expected_query_count
+        log("would have prevented all #{expected_query_count} queries")
+      end
+
+    end
+
+    def increment_query_count(association_name)
+      loaded_associations[association_name] ||= 0
+      loaded_associations[association_name] += 1
     end
 
     def expected_query_count

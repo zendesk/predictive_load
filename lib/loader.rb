@@ -6,22 +6,36 @@ module PredictiveLoad
   #
   class Loader
 
-    attr_reader :records
+    def self.observe(records)
+      new(records).observe
+    end
 
     def initialize(records)
       @records = records
     end
 
+    def loading_association(record, association_name)
+      if all_records_will_likely_load_association?(association_name)
+        preload(association_name)
+      end
+    end
+
+    def all_records_will_likely_load_association?(association_name)
+      if Rails.env.test? && association_name.to_s.index('_stub_')
+        false
+      else
+        true
+      end
+    end
+
+    protected
+
+    attr_reader :records
+
     def observe
       records.each do |record|
         record.collection_observer = self
       end
-    end
-
-    def loading_association(record, association_name)
-      return if Rails.env.test? && association_name.to_s.index('_stub_')
-
-      preload(association_name)
     end
 
     def preload(association_name)
