@@ -14,6 +14,12 @@ module PredictiveLoad
       @records = records
     end
 
+    def observe
+      records.each do |record|
+        record.collection_observer = self
+      end
+    end
+
     def loading_association(record, association_name)
       if all_records_will_likely_load_association?(association_name)
         preload(association_name)
@@ -31,12 +37,6 @@ module PredictiveLoad
     protected
 
     attr_reader :records
-
-    def observe
-      records.each do |record|
-        record.collection_observer = self
-      end
-    end
 
     def preload(association_name)
       ActiveRecord::Associations::Preloader.new(records_with_association(association_name), [ association_name ]).run

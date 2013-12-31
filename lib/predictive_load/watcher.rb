@@ -1,3 +1,5 @@
+require 'predictive_load/loader'
+
 module PredictiveLoad
   # Provides N+1 detection / log mode.
   #
