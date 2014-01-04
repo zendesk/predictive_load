@@ -1,11 +1,26 @@
 ActiveRecord::Schema.define(:version => 1) do
 
   drop_table(:users)    rescue nil
+  drop_table(:emails)   rescue nil
+  drop_table(:photos)   rescue nil
   drop_table(:topics)   rescue nil
   drop_table(:comments) rescue nil
+  drop_table(:emails_users) rescue nil
 
   create_table(:users) do |t|
     t.string   :name,    :null => false
+  end
+
+  create_table(:photos) do |t|
+    t.integer  :user_id, :null => false
+  end
+
+  create_table(:emails_users) do |t|
+    t.integer :user_id
+    t.integer :email_id
+  end
+
+  create_table(:emails) do |t|
   end
 
   create_table(:topics) do |t|
