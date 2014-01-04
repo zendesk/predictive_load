@@ -108,6 +108,23 @@ describe PredictiveLoad::Loader do
       end
 
       describe "unsupported behavior" do
+        it "does not preload when dynamically scoped" do
+          users = User.all
+          topic = Topic.first
+          assert_queries(2) do
+            users.each { |user| user.comments.by_topic(topic).to_a }
+          end
+        end
+
+        it "does not preload when staticly scoped" do
+          users = User.all
+          topic = Topic.first
+          assert_queries(2) do
+            users.each { |user| user.comments.recent.to_a }
+          end
+        end
+
+
         it "does not preload #size" do
           users = User.all
           assert_queries(2) do
@@ -121,8 +138,8 @@ describe PredictiveLoad::Loader do
             users.each { |user| user.comments.first }
           end
         end
-
       end
+
     end
 
   end

@@ -15,6 +15,9 @@ end
 class Comment < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
+
+  scope :by_topic, lambda { |topic| where(:topic_id => topic.id) }
+  scope :recent, order('updated_at desc')
 end
 
 class Photo < ActiveRecord::Base
