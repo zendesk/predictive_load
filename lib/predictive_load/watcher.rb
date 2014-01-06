@@ -1,4 +1,5 @@
 require 'predictive_load/loader'
+require 'predictive_load/preload_log'
 
 module PredictiveLoad
   # Provides N+1 detection / log mode.
@@ -7,16 +8,16 @@ module PredictiveLoad
   # ActiveRecord::Relation.collection_observer = PredictiveLoad::Watcher
   #
   # Example output:
-  # lazy_loader_log: detected n1 call on Comment#account
-  # lazy_loader_log: expect to prevent 1 queries
-  # lazy_loader_log: would preload with: SELECT `accounts`.* FROM `accounts`  WHERE `accounts`.`id` IN (...)
-  # lazy_loader_log: +----+-------------+----------+-------+---------------+---------+---------+-------+------+-------+
-  # lazy_loader_log: | id | select_type | table    | type  | possible_keys | key     | key_len | ref   | rows | Extra |
-  # lazy_loader_log: +----+-------------+----------+-------+---------------+---------+---------+-------+------+-------+
-  # lazy_loader_log: |  1 | SIMPLE      | accounts | const | PRIMARY       | PRIMARY | 4       | const |    1 |       |
-  # lazy_loader_log: +----+-------------+----------+-------+---------------+---------+---------+-------+------+-------+
-  # lazy_loader_log: 1 row in set (0.00 sec)
-  # lazy_loader_log: would have prevented all 1 queries
+  # predictive_load: detected n1 call on Comment#account
+  # predictive_load: expect to prevent 1 queries
+  # predictive_load: would preload with: SELECT `accounts`.* FROM `accounts`  WHERE `accounts`.`id` IN (...)
+  # predictive_load: +----+-------------+----------+-------+---------------+---------+---------+-------+------+-------+
+  # predictive_load: | id | select_type | table    | type  | possible_keys | key     | key_len | ref   | rows | Extra |
+  # predictive_load: +----+-------------+----------+-------+---------------+---------+---------+-------+------+-------+
+  # predictive_load: |  1 | SIMPLE      | accounts | const | PRIMARY       | PRIMARY | 4       | const |    1 |       |
+  # predictive_load: +----+-------------+----------+-------+---------------+---------+---------+-------+------+-------+
+  # predictive_load: 1 row in set (0.00 sec)
+  # predictive_load: would have prevented all 1 queries
   class Watcher < Loader
 
     attr_reader :loaded_associations
@@ -42,16 +43,20 @@ module PredictiveLoad
       log("detected n1 call on #{records.first.class.name}##{association_name}")
 
       # Detailed logging for first query
-      if query_count == 1
+      if query_count(association_name) == 1
         log("expect to prevent #{expected_query_count} queries")
         log_preload(association_name)
       end
 
       # All records loaded association
-      if query_count == expected_query_count
+      if query_count(association_name) == expected_query_count
         log("would have prevented all #{expected_query_count} queries")
       end
 
+    end
+
+    def query_count(association_name)
+      loaded_associations[association_name] || 0
     end
 
     def increment_query_count(association_name)
@@ -68,7 +73,7 @@ module PredictiveLoad
     end
 
     def log(message)
-      Rails.logger.info("lazy_loader: #{message}")
+      ActiveRecord::Base.logger.info("predictive_load: #{message}")
     end
 
   end

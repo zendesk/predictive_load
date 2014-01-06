@@ -1,4 +1,4 @@
-require 'active_record/assocations/preloader'
+require 'active_record/associations/preloader'
 
 module PredictiveLoad
   class PreloadLog < ActiveRecord::Associations::Preloader
@@ -26,7 +26,7 @@ module PredictiveLoad
     end
 
     def log(message)
-      Rails.logger.info("lazy_loader: #{message}")
+      ActiveRecord::Base.logger.info("predictive_load: #{message}")
     end
 
   end
