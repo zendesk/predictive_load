@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/eac/resque-durable.png)](https://travis-ci.org/eac/predictive_load)
+
 predictive_load
 ===============
 
