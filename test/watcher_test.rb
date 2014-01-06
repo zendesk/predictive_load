@@ -39,6 +39,22 @@ predictive_load: would have prevented all 1 queries
       end
     end
 
+    it "does not log :through association queries" do
+      users = User.all
+      message = "predictive_load: detected n1 call on User#topics
+predictive_load: expect to prevent 1 queries
+predictive_load: encountered :through association for topics. Requires loading records to generate query, so skipping for now.
+predictive_load: would have prevented all 1 queries
+"
+
+      timing_pattern = /\d+\.\d+ms/
+      message.gsub!(timing_pattern, '')
+      assert_log(message, timing_pattern) do
+        users.each { |user| user.topics.to_a }
+      end
+
+    end
+
   end
 
   def assert_log(message, gsub_pattern)
