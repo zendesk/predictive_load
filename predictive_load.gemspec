@@ -12,5 +12,5 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "predictive_load"
-  gem.version       = '0.1.0'
+  gem.version       = '0.1.1'
 end
