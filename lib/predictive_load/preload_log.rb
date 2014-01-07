@@ -18,7 +18,7 @@ module PredictiveLoad
           preload_sql = preloader.scoped.where(collection_arel(preloader)).to_sql
 
           log("would preload with: #{preload_sql.to_s}")
-          ActiveRecord::Base.connection.explain(preload_sql).each_line do |line|
+          klass.connection.explain(preload_sql).each_line do |line|
             log(line)
           end
         end
