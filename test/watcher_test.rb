@@ -23,6 +23,8 @@ describe PredictiveLoad::Watcher do
 
     it "logs what the loader would have done" do
       users = User.all
+      users[0].id = 1
+      users[1].id = 2
       message = "predictive_load: detected n1 call on User#comments
 predictive_load: expect to prevent 1 queries
 predictive_load: would preload with: SELECT \"comments\".* FROM \"comments\"  WHERE \"comments\".\"user_id\" IN (1, 2)
