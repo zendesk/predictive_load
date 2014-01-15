@@ -48,7 +48,7 @@ module PredictiveLoad::ActiveRecordCollectionObservation
 
     def notify_collection_observer
       if @owner.collection_observer
-        @owner.collection_observer.loading_association(@owner, @reflection.name)
+        @owner.collection_observer.loading_association(@owner, self)
       end
     end
 

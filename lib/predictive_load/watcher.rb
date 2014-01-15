@@ -27,8 +27,10 @@ module PredictiveLoad
       @loaded_associations = {}
     end
 
-    def loading_association(record, association_name)
+    def loading_association(record, association)
+      association_name = association.reflection.name
       return if !all_records_will_likely_load_association?(association_name)
+      return if !supports_preload?(association)
 
       if loaded_associations.key?(association_name)
         log_query_plan(association_name)

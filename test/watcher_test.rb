@@ -57,14 +57,24 @@ predictive_load: would have prevented all 1 queries
 
     end
 
+    it "does not blow up when preloading associations with proc conditions" do
+      log    = StringIO.new
+      logger = build_logger(log)
+      ActiveRecord::Base.logger = logger
+
+      comments = Comment.all
+      assert_equal 2, comments.size
+      assert_queries(2) do
+        comments.each { |comment| assert comment.user_by_proc.full_name }
+      end
+    end
+
   end
 
   def assert_log(message, gsub_pattern)
     original_logger = ActiveRecord::Base.logger
     log    = StringIO.new
-    logger = Logger.new(log)
-    logger.level = Logger::Severity::INFO
-    logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
+    logger = build_logger(log)
     ActiveSupport::LogSubscriber.colorize_logging = false
     ActiveRecord::Base.logger = logger
 
@@ -74,6 +84,13 @@ predictive_load: would have prevented all 1 queries
     assert_equal message, result
   ensure
     ActiveRecord::Base.logger = original_logger
+  end
+
+  def build_logger(log)
+    Logger.new(log).tap do |logger|
+      logger.level     = Logger::Severity::INFO
+      logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
+    end
   end
 
 end

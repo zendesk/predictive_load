@@ -20,8 +20,10 @@ module PredictiveLoad
       end
     end
 
-    def loading_association(record, association_name)
-      if all_records_will_likely_load_association?(association_name)
+    def loading_association(record, association)
+      association_name = association.reflection.name
+
+      if all_records_will_likely_load_association?(association_name) && supports_preload?(association)
         preload(association_name)
       end
     end
@@ -32,6 +34,11 @@ module PredictiveLoad
       else
         true
       end
+    end
+
+    def supports_preload?(association)
+      return false if association.reflection.options[:conditions].respond_to?(:to_proc)
+      true
     end
 
     protected

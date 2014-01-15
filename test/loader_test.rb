@@ -44,6 +44,14 @@ describe PredictiveLoad::Loader do
         end
       end
 
+      it "does not attempt to preload associations with proc conditions" do
+        comments = Comment.all
+        assert_equal 2, comments.size
+        assert_queries(2) do
+          comments.each { |comment| assert comment.user_by_proc.full_name }
+        end
+      end
+
     end
 
     describe "has_one" do
