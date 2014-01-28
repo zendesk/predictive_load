@@ -7,12 +7,16 @@ Observes Active Record collections and notifies when a member loads an associati
 * automatically preloading the association in a single query for all members of that collection.
 * N+1 detection logging 
 
-
-
 ### Automatic preloading
 
 
 ```ruby
+require 'predictive_load'
+require 'predictive_load/active_record_collection_observation'
+ActiveRecord::Base.send(:include, PredictiveLoad::ActiveRecordCollectionObservation)
+
+require 'predictive_load/loader'
+
 ActiveRecord::Relation.collection_observer = PredictiveLoad::Loader
 
 Ticket.all.each do |ticket| 
@@ -32,6 +36,12 @@ Produces:
 
 There is also a log-only version:
 ```ruby
+require 'predictive_load'
+require 'predictive_load/active_record_collection_observation'
+ActiveRecord::Base.send(:include, PredictiveLoad::ActiveRecordCollectionObservation)
+
+require 'predictive_load/watcher'
+
 ActiveRecord::Relation.collection_observer = PredictiveLoad::Watcher
 
 Comment.all.each do |comment|
