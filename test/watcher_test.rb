@@ -60,13 +60,12 @@ predictive_load: would have prevented all 1 queries
       logger = build_logger(log)
       ActiveRecord::Base.logger = logger
 
-      comments = Comment.all
+      comments = Comment.all.to_a
       assert_equal 2, comments.size
       assert_queries(2) do
         comments.each { |comment| assert comment.user_by_proc.full_name }
       end
     end
-
   end
 
   def assert_log(message, ignore)

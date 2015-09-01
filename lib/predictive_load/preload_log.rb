@@ -8,14 +8,16 @@ module PredictiveLoad
     def preload(association)
       grouped_records(association).each do |reflection, klasses|
         klasses.each do |klass, records|
-          preloader   = preloader_for(reflection).new(klass, records, reflection, options)
+          preload_scope = (ActiveRecord::VERSION::MAJOR == 3 ? options : self.preload_scope)
+          preloader   = preloader_for(reflection).new(klass, records, reflection, preload_scope)
 
           if preloader.respond_to?(:through_reflection)
             log("encountered :through association for #{association}. Requires loading records to generate query, so skipping for now.")
             next
           end
 
-          preload_sql = preloader.scoped.where(collection_arel(preloader)).to_sql
+          scope = (ActiveRecord::VERSION::MAJOR == 3 ? preloader.scoped : preloader.scope)
+          preload_sql = scope.where(collection_arel(preloader)).to_sql
 
           log("would preload with: #{preload_sql.to_s}")
           klass.connection.explain(preload_sql).each_line do |line|

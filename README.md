@@ -32,6 +32,14 @@ Produces:
   SELECT `accounts`.* FROM `accounts` WHERE `accounts`.`id` IN (1, 2, 3)
 ```
 
+### Disabling preload
+
+Some things cannot be preloaded, use `no_preload`
+
+```
+has_many :foos, no_preload: true
+```
+
 ### N+1 detection logging
 
 There is also a log-only version:
