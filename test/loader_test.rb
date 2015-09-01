@@ -140,11 +140,19 @@ describe PredictiveLoad::Loader do
           end
         end
 
-        it "preloads when staticly scoped" do
-          skip "static scopes could be cached in rails 3 too, but they are not for some reason" if ActiveRecord::VERSION::MAJOR == 3
+        it "does not preload when staticly scoped" do
+          skip "this only caches on rails 4.0 ... and is removed in rails 4.1+" if ActiveRecord::VERSION::STRING >= "4.0.0"
           users = User.all.to_a
-          assert_queries(1) do
+          assert_queries(2) do
             users.each { |user| user.comments.recent.to_a }
+          end
+        end
+
+        it "does not preload when block scoped" do
+          skip "Unsupported syntax" if ActiveRecord::VERSION::MAJOR == 3
+          users = User.all.to_a
+          assert_queries(2) do
+            users.each { |user| user.comments.recent_v2.to_a }
           end
         end
 
