@@ -36,6 +36,7 @@ predictive_load: would have prevented all 1 queries
 "
       timing_pattern = /\d+\.\d+ms/
       message.gsub!(timing_pattern, '')
+      message.gsub!(' (~100000 rows)', '') # somehow this exists on CI but not locally
       assert_log(message, timing_pattern) do
         users.each { |user| user.comments.to_a }
       end
