@@ -34,10 +34,7 @@ predictive_load: 0|0|0|EXECUTE LIST SUBQUERY 1
 
 predictive_load: would have prevented all 1 queries
 "
-      timing_pattern = /\d+\.\d+ms/
-      message.gsub!(timing_pattern, '')
-      message.gsub!(' (~100000 rows)', '') # somehow this exists on CI but not locally
-      assert_log(message, timing_pattern) do
+      assert_log(message, /\d+\.\d+ms| \(~100000 rows\)/) do
         users.each { |user| user.comments.to_a }
       end
     end
@@ -72,7 +69,7 @@ predictive_load: would have prevented all 1 queries
 
   end
 
-  def assert_log(message, gsub_pattern)
+  def assert_log(message, ignore)
     original_logger = ActiveRecord::Base.logger
     log    = StringIO.new
     logger = build_logger(log)
@@ -80,8 +77,10 @@ predictive_load: would have prevented all 1 queries
     ActiveRecord::Base.logger = logger
 
     yield
+
     result = log.string
-    result.gsub!(gsub_pattern, '')
+    result.gsub!(ignore, '')
+    message.gsub!(ignore, '')
     assert_equal message, result
   ensure
     ActiveRecord::Base.logger = original_logger
@@ -93,5 +92,4 @@ predictive_load: would have prevented all 1 queries
       logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
     end
   end
-
 end
