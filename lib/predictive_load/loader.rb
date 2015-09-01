@@ -49,7 +49,11 @@ module PredictiveLoad
     end
 
     def preload(association_name)
-      ActiveRecord::Associations::Preloader.new(records_with_association(association_name), [ association_name ]).run
+      if ActiveRecord::VERSION::STRING <= "4.1.0"
+        ActiveRecord::Associations::Preloader.new(records_with_association(association_name), [ association_name ]).run
+      else
+        ActiveRecord::Associations::Preloader.new.preload(records_with_association(association_name), [ association_name ])
+      end
     end
 
     def records_with_association(association_name)

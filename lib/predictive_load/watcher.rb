@@ -1,3 +1,5 @@
+raise "Not supported on rails 4.1+" if ActiveRecord::VERSION::STRING >= "4.1.0"
+
 require 'predictive_load/loader'
 require 'predictive_load/preload_log'
 

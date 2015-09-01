@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.name          = "predictive_load"
   gem.version       = '0.1.2'
 
-  gem.add_runtime_dependency "activerecord", ">= 3.2.0", "< 4.1.0"
+  gem.add_runtime_dependency "activerecord", ">= 3.2.0", "< 4.2.0"
   gem.add_development_dependency "minitest"
   gem.add_development_dependency "minitest-rg"
   gem.add_development_dependency 'sqlite3'
