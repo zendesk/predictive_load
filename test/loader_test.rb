@@ -2,7 +2,6 @@ require_relative 'helper'
 require 'predictive_load/loader'
 
 describe PredictiveLoad::Loader do
-
   describe "A collection of records" do
     before do
       ActiveRecord::Relation.collection_observer = PredictiveLoad::Loader
@@ -13,8 +12,8 @@ describe PredictiveLoad::Loader do
       user1 = User.create!(:name => "Rudolph")
       user2 = User.create!(:name => "Santa")
       user1.emails.create!
-      comment1 = topic.comments.create!(:body => "meow",     :user => user1)
-      comment2 = topic.comments.create!(:body => "Ho Ho ho", :user => user2)
+      topic.comments.create!(:body => "meow",     :user => user1)
+      topic.comments.create!(:body => "Ho Ho ho", :user => user2)
     end
 
     after do
@@ -35,9 +34,8 @@ describe PredictiveLoad::Loader do
     end
 
     describe "belongs_to" do
-
       it "automatically preloads" do
-        comments = Comment.all
+        comments = Comment.all.to_a
         assert_equal 2, comments.size
         assert_queries(1) do
           comments.each { |comment| assert comment.user.name }
@@ -45,32 +43,54 @@ describe PredictiveLoad::Loader do
       end
 
       it "does not attempt to preload associations with proc conditions" do
-        comments = Comment.all
+        comments = Comment.all.to_a
         assert_equal 2, comments.size
         assert_queries(2) do
           comments.each { |comment| assert comment.user_by_proc.full_name }
         end
       end
 
+      it "does not attempt to preload associations with proc that has arguments / uses instance" do
+        skip "Unsupported syntax" if ActiveRecord::VERSION::MAJOR == 3
+        comments = Comment.all.to_a
+        assert_equal 2, comments.size
+        assert_queries(2) do
+          comments.each { |comment| assert comment.user_by_proc_v2.full_name }
+        end
+      end
+
+      it "does attempt to preload associations with proc that have no arguments / does not use instance" do
+        skip "Unsupported syntax" if ActiveRecord::VERSION::MAJOR == 3
+        comments = Comment.all.to_a
+        assert_equal 2, comments.size
+        assert_queries(1) do
+          comments.each { |comment| assert comment.user_by_proc_v2_no_args.full_name }
+        end
+      end
+
+      it "does not attempt to preload associations with no_preload" do
+        comments = Comment.all.to_a
+        assert_equal 2, comments.size
+        assert_queries(2) do
+          comments.each { |comment| assert comment.user_no_preload.full_name }
+        end
+      end
     end
 
     describe "has_one" do
-
       it "automatically preloads" do
-        users = User.all
+        users = User.all.to_a
         assert_equal 2, users.size
 
         assert_queries(1) do
           users.each { |user| user.photo }
         end
       end
-
     end
 
     describe "has_many :through" do
-
       it "automatically preloads" do
-        users = User.all
+        users = User.all.to_a
         assert_equal 2, users.size
 
         assert_queries(3) do
@@ -80,27 +100,23 @@ describe PredictiveLoad::Loader do
             end
           end
         end
-
       end
     end
 
     describe "has_and_belongs_to_many" do
-
       it "automatically preloads" do
-        users = User.all
+        users = User.all.to_a
         assert_equal 2, users.size
 
         assert_queries(1) do
           users.each { |user| user.emails.to_a }
         end
-
       end
     end
 
     describe "has_many" do
-
       it "automatically prelaods" do
-        users = User.all
+        users = User.all.to_a
         assert_equal 2, users.size
         assert_queries(1) do
           users.each { |user| user.comments.to_a }
@@ -108,7 +124,7 @@ describe PredictiveLoad::Loader do
       end
 
       it "preloads #length" do
-        users = User.all
+        users = User.all.to_a
         assert_equal 2, users.size
         assert_queries(1) do
           users.each { |user| user.comments.length }
@@ -117,39 +133,35 @@ describe PredictiveLoad::Loader do
 
       describe "unsupported behavior" do
         it "does not preload when dynamically scoped" do
-          users = User.all
+          users = User.all.to_a
           topic = Topic.first
           assert_queries(2) do
             users.each { |user| user.comments.by_topic(topic).to_a }
           end
         end
 
-        it "does not preload when staticly scoped" do
-          users = User.all
-          topic = Topic.first
-          assert_queries(2) do
+        it "preloads when staticly scoped" do
+          skip "static scopes could be cached in rails 3 too, but they are not for some reason" if ActiveRecord::VERSION::MAJOR == 3
+          users = User.all.to_a
+          assert_queries(1) do
             users.each { |user| user.comments.recent.to_a }
           end
         end
 
-
         it "does not preload #size" do
-          users = User.all
+          users = User.all.to_a
           assert_queries(2) do
             users.each { |user| user.comments.size }
           end
         end
 
         it "does not preload first/last" do
-          users = User.all
+          users = User.all.to_a
           assert_queries(2) do
             users.each { |user| user.comments.first }
           end
         end
       end
-
     end
-
   end
-
 end

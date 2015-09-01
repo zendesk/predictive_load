@@ -1,6 +1,7 @@
 language: ruby
 sudo: false
 cache: bundler
+bundle_args: ""
 branches:
   only: [master]
 
@@ -12,6 +13,7 @@ rvm:
 
 gemfile:
  - gemfiles/rails32.gemfile
+ - gemfiles/rails40.gemfile
 
 
 matrix:

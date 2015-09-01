@@ -5,7 +5,6 @@ module PredictiveLoad
   # ActiveRecord::Relation.collection_observer = LazyLoader
   #
   class Loader
-
     def self.observe(records)
       new(records).observe
     end
@@ -37,7 +36,11 @@ module PredictiveLoad
     end
 
     def supports_preload?(association)
-      return false if association.reflection.options[:conditions].respond_to?(:to_proc)
+      return false if association.reflection.options[:no_preload]
+      return false if association.reflection.options[:conditions].respond_to?(:to_proc) # rails 3 conditions proc (we do not know if it uses instance methods)
+      if ActiveRecord::VERSION::MAJOR > 3
+        return false if association.reflection.scope.try(:arity).to_i > 0 # rails 4+ conditions block, if it uses a passed in object, we assume it is not preloadable
+      end
       true
     end
 
@@ -59,10 +62,9 @@ module PredictiveLoad
 
     def mixed_collection?
       @mixed_collection ||= begin
-                              klass = records.first.class
-                              records.any? { |record| record.class != klass }
-                            end
+        klass = records.first.class
+        records.any? { |record| record.class != klass }
+      end
     end
-
   end
 end
