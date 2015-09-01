@@ -1,6 +1,14 @@
 language: ruby
+sudo: false
+cache: bundler
+
 rvm:
   - 1.9.3
   - 2.0.0
   - 2.1.6
   - 2.2.2
+
+gemfile:
+ - gemfiles/rails32.gemfile
+
+script: bundle exec rake test
