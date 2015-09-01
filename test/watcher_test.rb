@@ -28,7 +28,7 @@ describe PredictiveLoad::Watcher do
       message = "predictive_load: detected n1 call on User#comments
 predictive_load: expect to prevent 1 queries
 predictive_load: would preload with: SELECT \"comments\".* FROM \"comments\"  WHERE \"comments\".\"user_id\" IN (1, 2)
-predictive_load: 0|0|0|SCAN TABLE comments (~100000 rows)
+predictive_load: 0|0|0|SCAN TABLE comments
 
 predictive_load: 0|0|0|EXECUTE LIST SUBQUERY 1
 
