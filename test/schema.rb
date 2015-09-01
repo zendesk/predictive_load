@@ -1,3 +1,5 @@
+ActiveRecord::Schema.verbose = false
+
 ActiveRecord::Schema.define(:version => 1) do
 
   drop_table(:users)    rescue nil
