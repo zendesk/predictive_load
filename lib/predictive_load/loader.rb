@@ -40,7 +40,7 @@ module PredictiveLoad
     end
 
     def supports_preload?(association)
-      return false if association.reflection.options[:no_preload]
+      return false if association.reflection.options[:predictive_load] == false
       return false if association.reflection.options[:conditions].respond_to?(:to_proc) # rails 3 conditions proc (we do not know if it uses instance methods)
       if ActiveRecord::VERSION::MAJOR > 3
         return false if association.reflection.scope.try(:arity).to_i > 0 # rails 4+ conditions block, if it uses a passed in object, we assume it is not preloadable

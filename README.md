@@ -34,10 +34,10 @@ Produces:
 
 ### Disabling preload
 
-Some things cannot be preloaded, use `no_preload`
+Some things cannot be preloaded, use `predictive_load: false`
 
 ```
-has_many :foos, no_preload: true
+has_many :foos, predictive_load: false
 ```
 
 ### N+1 detection logging
