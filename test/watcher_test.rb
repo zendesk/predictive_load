@@ -36,14 +36,14 @@ describe PredictiveLoad::Watcher do
       users[1].id = 2
       message = "predictive_load: detected n1 call on User#comments
 predictive_load: expect to prevent 1 queries
-predictive_load: would preload with: SELECT \"comments\".* FROM \"comments\"  WHERE \"comments\".\"user_id\" IN (1, 2)
+predictive_load: would preload with: SELECT \"comments\".* FROM \"comments\"  WHERE \"comments\".\"public\" = 't' AND \"comments\".\"user_id\" IN (1, 2)
 predictive_load: 0|0|0|SCAN TABLE comments
 
 predictive_load: 0|0|0|EXECUTE LIST SUBQUERY 1
 
 predictive_load: would have prevented all 1 queries
 "
-      assert_log(message, /\d+\.\d+ms| \(~100000 rows\)/) do
+      assert_log(message, /\d+\.\d+ms| \(~10+ rows\)/) do
         users.each { |user| user.comments.to_a }
       end
     end

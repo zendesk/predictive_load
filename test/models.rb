@@ -20,6 +20,7 @@ class Topic < ActiveRecord::Base
 end
 
 class Comment < ActiveRecord::Base
+  default_scope { where(public: true) }
   belongs_to :user
 
   unless ActiveRecord::VERSION::STRING > "4.1.0"
