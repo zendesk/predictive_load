@@ -69,7 +69,7 @@ describe PredictiveLoad::Loader do
         end
       end
 
-      it "does not attempt to preload associations with no_preload" do
+      it "does not attempt to preload associations with predictive_load: false" do
         comments = Comment.all.to_a
         assert_equal 2, comments.size
         assert_queries(2) do

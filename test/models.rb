@@ -38,7 +38,7 @@ class Comment < ActiveRecord::Base
   end
 
   belongs_to :user_no_preload,
-    :class_name => "User", :foreign_key => :user_id, :no_preload => true
+    :class_name => "User", :foreign_key => :user_id, :predictive_load => false
 
   belongs_to :topic
 
