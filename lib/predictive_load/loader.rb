@@ -27,6 +27,10 @@ module PredictiveLoad
       end
     end
 
+    protected
+
+    attr_reader :records
+
     def all_records_will_likely_load_association?(association_name)
       if defined?(Mocha) && association_name.to_s.index('_stub_')
         false
@@ -43,10 +47,6 @@ module PredictiveLoad
       end
       true
     end
-
-    protected
-
-    attr_reader :records
 
     def preload(association_name)
       ActiveRecord::Associations::Preloader.new(records_with_association(association_name), [ association_name ]).run
