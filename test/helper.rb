@@ -2,6 +2,8 @@ require 'bundler/setup'
 require 'minitest/autorun'
 require 'minitest/rg'
 require 'active_record'
+require 'active_support/all'
+require 'active_record/associations/builder/belongs_to' # pretend we loaded this first to test initializer
 require 'predictive_load'
 require 'predictive_load/active_record_collection_observation'
 require 'query_diet/logger'
