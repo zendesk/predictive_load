@@ -7,10 +7,12 @@ class User < ActiveRecord::Base
   def full_name
     name
   end
-
 end
 
 class Email < ActiveRecord::Base
+end
+
+class EmailsUser < ActiveRecord::Base
 end
 
 class Topic < ActiveRecord::Base
@@ -20,10 +22,11 @@ end
 class Comment < ActiveRecord::Base
   belongs_to :user
 
-
-  ActiveSupport::Deprecation.silence do
-    belongs_to :user_by_proc, :class_name => "User", :foreign_key => :user_id,
-      :conditions => proc { |object| "1 = #{ActiveRecord::VERSION::MAJOR == 3 ? one : object.one}" }
+  unless ActiveRecord::VERSION::STRING > "4.1.0"
+    ActiveSupport::Deprecation.silence do
+      belongs_to :user_by_proc, :class_name => "User", :foreign_key => :user_id,
+        :conditions => proc { |object| "1 = #{ActiveRecord::VERSION::MAJOR == 3 ? one : object.one}" }
+    end
   end
 
   if ActiveRecord::VERSION::MAJOR > 3

@@ -43,6 +43,7 @@ describe PredictiveLoad::Loader do
       end
 
       it "does not attempt to preload associations with proc conditions" do
+        skip "Unsupported syntax" if ActiveRecord::VERSION::STRING > "4.1.0"
         comments = Comment.all.to_a
         assert_equal 2, comments.size
         assert_queries(2) do
@@ -105,10 +106,14 @@ describe PredictiveLoad::Loader do
 
     describe "has_and_belongs_to_many" do
       it "automatically preloads" do
+        User.create!(name: 'ddd')
         users = User.all.to_a
-        assert_equal 2, users.size
+        assert_equal 3, users.size
+        users.each { |user| EmailsUser.create!(user_id: user.id, email_id: Email.create!.id) }
 
-        assert_queries(1) do
+        expected = (ActiveRecord::VERSION::STRING < "4.1.0" ? 1 : 2) # did a join before, now does 2 queries
+
+        assert_queries(expected) do
           users.each { |user| user.emails.to_a }
         end
       end
