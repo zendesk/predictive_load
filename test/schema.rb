@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.string   :body,     :null => false
     t.integer  :topic_id, :null => false
     t.integer  :user_id,  :null => false
+    t.boolean  :public,   :null => false, :default => true
     t.timestamps
   end
 
