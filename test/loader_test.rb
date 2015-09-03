@@ -161,17 +161,29 @@ describe PredictiveLoad::Loader do
         end
       end
 
-      it "preloads correctly when unscoped" do
-        # users each have a public and private comment, the private comment is excluded by the default scope
-        users = User.all.to_a
-        assert_equal 2, users.size
-        users.each { |u| Comment.create!(user: u, public: false, topic: Topic.first, body: "xx") }
+      describe "with comments outside of default scope" do
+        before do
+          # users each have a public and private comment, the private comment is excluded by the default scope
+          @users = User.all.to_a
+          assert_equal 2, @users.size
+          @users.each { |u| Comment.create!(user: u, public: false, topic: Topic.first, body: "xx") }
+        end
 
-        # when eager loading inside of unscoped the private comment should show up
-        Comment.unscoped do
-          expected = (ActiveRecord::VERSION::MAJOR == 4 ? 2 : 1) # we disable preloading in unscoped blocks in rails 4 because it's broken ... maybe patch coming for 5 https://github.com/rails/rails/pull/16531
-          assert_queries(expected) do
-            users.each { |user| user.comments.to_a.map(&:public).uniq.must_equal [true, false] }
+        it "preloads correctly when unscoped for eager loaded class" do
+          # when eager loading inside of unscoped the private comment should show up
+          Comment.unscoped do
+            expected = (ActiveRecord::VERSION::MAJOR == 4 ? 2 : 1) # we disable preloading in unscoped blocks in rails 4 because it's broken ... maybe patch coming for 5 https://github.com/rails/rails/pull/16531
+            assert_queries(expected) do
+              @users.each { |user| user.comments.to_a.map(&:public).uniq.must_equal [true, false] }
+            end
+          end
+        end
+
+        it "preloads correctly when unscoped for a different class" do
+          User.unscoped do
+            assert_queries(1) do
+              @users.each { |user| user.comments.to_a.map(&:public).uniq.must_equal [true] }
+            end
           end
         end
       end

@@ -39,10 +39,10 @@ module PredictiveLoad::ActiveRecordCollectionObservation
       def unscoped
         if block_given?
           begin
-            old, self.predictive_load_disabled = predictive_load_disabled, true
+            predictive_load_disabled << self
             super
           ensure
-            self.predictive_load_disabled = old
+            predictive_load_disabled.pop
           end
         else
           super
@@ -50,12 +50,8 @@ module PredictiveLoad::ActiveRecordCollectionObservation
       end
     end
 
-    def predictive_load_disabled=(value)
-      Thread.current[:predictive_load_disabled] = value
-    end
-
     def predictive_load_disabled
-      Thread.current[:predictive_load_disabled]
+      Thread.current[:predictive_load_disabled] ||= []
     end
   end
 
