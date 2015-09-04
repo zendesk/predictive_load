@@ -136,6 +136,22 @@ describe PredictiveLoad::Loader do
         end
       end
 
+      it "preloads #present?" do
+        users = User.all.to_a
+        assert_equal 2, users.size
+        assert_queries(1) do
+          users.each { |user| user.comments.present? }
+        end
+      end
+
+      it "preloads polymorhic" do
+        users = User.all.to_a
+        assert_equal 2, users.size
+        assert_queries(1) do
+          users.each { |user| user.attachments.present? }
+        end
+      end
+
       it "preloads correctly when unscoped" do
         # users each have a public and private comment, the private comment is excluded by the default scope
         users = User.all.to_a
