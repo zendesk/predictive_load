@@ -43,8 +43,15 @@ module PredictiveLoad
       return false if ActiveRecord::Base.predictive_load_disabled
       return false if association.reflection.options[:predictive_load] == false
       return false if association.reflection.options[:conditions].respond_to?(:to_proc) # rails 3 conditions proc (we do not know if it uses instance methods)
-      if ActiveRecord::VERSION::MAJOR > 3
-        return false if association.reflection.scope.try(:arity).to_i > 0 # rails 4+ conditions block, if it uses a passed in object, we assume it is not preloadable
+      if ActiveRecord::VERSION::MAJOR > 3 && scope = association.reflection.scope
+        if scope.is_a?(Proc)
+          # rails 4+ conditions block, if it uses a passed in object, we assume it is not preloadable
+          return false if scope.arity.to_i > 0
+        elsif where = scope.options[:where]
+          # ActiveRecord::Associations::Builder::DeprecatedOptionsProc from rails 4.0 and deprecated finders
+          # when conditions was a proc the where will be a proc too -> check arity
+          return false if where.is_a?(Proc) && where.arity > 0
+        end
       end
       true
     end
