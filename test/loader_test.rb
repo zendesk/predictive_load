@@ -42,6 +42,15 @@ describe PredictiveLoad::Loader do
         end
       end
 
+      it "preloads with static conditions" do
+        skip "Unsupported syntax" if ActiveRecord::VERSION::STRING > "4.1.0"
+        comments = Comment.all.to_a
+        assert_equal 2, comments.size
+        assert_queries(1) do
+          comments.each { |comment| assert comment.user_with_static_conditions.name }
+        end
+      end
+
       it "does not attempt to preload associations with proc conditions" do
         skip "Unsupported syntax" if ActiveRecord::VERSION::STRING > "4.1.0"
         comments = Comment.all.to_a

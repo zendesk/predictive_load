@@ -25,8 +25,10 @@ class Comment < ActiveRecord::Base
 
   unless ActiveRecord::VERSION::STRING > "4.1.0"
     ActiveSupport::Deprecation.silence do
-      belongs_to :user_by_proc, :class_name => "User", :foreign_key => :user_id,
-        :conditions => proc { |object| "1 = #{ActiveRecord::VERSION::MAJOR == 3 ? one : object.one}" }
+      block = (ActiveRecord::VERSION::MAJOR == 3 ? proc { "1 = #{one}" } : proc { |object| "1 = #{object.one}" })
+      belongs_to :user_by_proc, :class_name => "User", :foreign_key => :user_id, :conditions => block
+
+      belongs_to :user_with_static_conditions, :class_name => "User", :foreign_key => :user_id, :conditions => "1 = 1"
     end
   end
 
