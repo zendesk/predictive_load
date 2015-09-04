@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   has_many :comments,  :dependent => :destroy
   has_many :topics,    :through => :comments
+  has_many :attachments, as: :source
   has_one  :photo
   has_and_belongs_to_many :emails
 
@@ -58,4 +59,8 @@ end
 
 class Photo < ActiveRecord::Base
   belongs_to :user
+end
+
+class Attachment < ActiveRecord::Base
+  belongs_to :source, polymorphic: true
 end

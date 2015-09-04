@@ -13,8 +13,10 @@ ActiveRecord::Base.class_eval do
   include PredictiveLoad::ActiveRecordCollectionObservation
 end
 
-database_config = YAML.load_file(File.join(File.dirname(__FILE__), 'database.yml'))
-ActiveRecord::Base.establish_connection(database_config['test'])
+ActiveRecord::Base.establish_connection(
+  adapter: "sqlite3",
+  database: ":memory:"
+)
 ActiveRecord::Base.default_timezone = :utc
 require_relative 'schema'
 require_relative 'models'
