@@ -47,8 +47,10 @@ class Comment < ActiveRecord::Base
   belongs_to :topic
 
   scope :by_topic, lambda { |topic| where(:topic_id => topic.id) }
-  ActiveSupport::Deprecation.silence do
+  if ActiveRecord::VERSION::MAJOR == 3
     scope :recent, order('updated_at desc')
+  else
+    scope :recent, -> { order('updated_at desc') }
   end
   scope :recent_v2, lambda { order('updated_at desc') }
 

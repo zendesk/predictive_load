@@ -1,2 +1,3 @@
 test/db
 Gemfile.lock
+gemfiles/*.gemfile.lock

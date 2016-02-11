@@ -1,5 +1,1 @@
-source "https://rubygems.org"
-
-gemspec
-
-gem "activerecord", "~> 3.2.0"
+eval_gemfile('gemfiles/rails3.2.gemfile')

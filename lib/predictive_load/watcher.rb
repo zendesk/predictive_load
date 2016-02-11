@@ -44,7 +44,7 @@ module PredictiveLoad
     protected
 
     def log_query_plan(association_name)
-      log("detected n1 call on #{records.first.class.name}##{association_name}")
+      log("detected n+1 call on #{records.first.class.name}##{association_name}")
 
       # Detailed logging for first query
       if query_count(association_name) == 1

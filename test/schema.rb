@@ -33,13 +33,13 @@ ActiveRecord::Schema.define(:version => 1) do
     t.integer  :topic_id, :null => false
     t.integer  :user_id,  :null => false
     t.boolean  :public,   :null => false, :default => true
-    t.timestamps
+    t.timestamps(null: false)
   end
 
   create_table(:attachments) do |t|
     t.string   :source_type, :null => false
     t.integer  :source_id,   :null => false
     t.boolean  :public, :default => true,   :null => false
-    t.timestamps
+    t.timestamps(null: false)
   end
 end
