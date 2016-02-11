@@ -1,4 +1,5 @@
 module PredictiveLoad
+
 end
 
 klasses = [ActiveRecord::Associations::Builder::Association]
@@ -9,5 +10,9 @@ if ActiveRecord::VERSION::MAJOR == 3
 end
 
 klasses.each do |klass|
-  klass.valid_options << :predictive_load
+  if ActiveRecord::VERSION::MAJOR < 5
+    klass.valid_options << :predictive_load
+  else
+    klass::VALID_OPTIONS << :predictive_load
+  end
 end

@@ -12,7 +12,8 @@ module PredictiveLoad::ActiveRecordCollectionObservation
 
     def self.included(base)
       base.class_attribute :collection_observer
-      base.alias_method_chain :to_a, :collection_observer
+      base.send(:alias_method, :to_a_without_collection_observer, :to_a)
+      base.send(:alias_method, :to_a, :to_a_with_collection_observer)
     end
 
     def to_a_with_collection_observer
@@ -35,7 +36,7 @@ module PredictiveLoad::ActiveRecordCollectionObservation
 
   # disable eager loading since includes + unscoped is broken on rails 4
   module UnscopedTracker
-    if ActiveRecord::VERSION::MAJOR == 4
+    if ActiveRecord::VERSION::MAJOR >= 4
       def unscoped
         if block_given?
           begin
@@ -58,7 +59,8 @@ module PredictiveLoad::ActiveRecordCollectionObservation
   module AssociationNotification
 
     def self.included(base)
-      base.alias_method_chain :load_target, :notification
+      base.send(:alias_method, :load_target_without_notification, :load_target)
+      base.send(:alias_method, :load_target, :load_target_with_notification)
     end
 
     def load_target_with_notification
@@ -80,7 +82,8 @@ module PredictiveLoad::ActiveRecordCollectionObservation
   module CollectionAssociationNotification
 
     def self.included(base)
-      base.alias_method_chain :load_target, :notification
+      base.send(:alias_method, :load_target_without_notification, :load_target)
+      base.send(:alias_method, :load_target, :load_target_with_notification)
     end
 
     def load_target_with_notification
