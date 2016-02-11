@@ -34,7 +34,7 @@ describe PredictiveLoad::Watcher do
       users = User.all
       users[0].id = 1
       users[1].id = 2
-      message = "predictive_load: detected n1 call on User#comments
+      message = "predictive_load: detected n+1 call on User#comments
 predictive_load: expect to prevent 1 queries
 predictive_load: would preload with: SELECT \"comments\".* FROM \"comments\"  WHERE \"comments\".\"public\" = 't' AND \"comments\".\"user_id\" IN (1, 2)
 predictive_load: 0|0|0|SCAN TABLE comments
@@ -50,7 +50,7 @@ predictive_load: would have prevented all 1 queries
 
     it "does not log :through association queries" do
       users = User.all
-      message = "predictive_load: detected n1 call on User#topics
+      message = "predictive_load: detected n+1 call on User#topics
 predictive_load: expect to prevent 1 queries
 predictive_load: encountered :through association for topics. Requires loading records to generate query, so skipping for now.
 predictive_load: would have prevented all 1 queries

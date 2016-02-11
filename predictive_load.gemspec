@@ -18,4 +18,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'bump'
   gem.add_development_dependency 'wwtd'
   gem.add_development_dependency 'query_diet'
+  gem.add_development_dependency 'byebug'
 end
