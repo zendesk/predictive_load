@@ -16,9 +16,4 @@ gemfile:
  - gemfiles/rails41.gemfile
  - gemfiles/rails42.gemfile
 
-matrix:
-  exclude:
-    - rvm: 2.2.2
-      gemfile: gemfiles/rails32.gemfile
-
 script: bundle exec rake test
