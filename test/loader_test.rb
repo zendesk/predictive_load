@@ -153,8 +153,17 @@ describe PredictiveLoad::Loader do
         end
       end
 
-      it "preloads polymorhic" do
+      it "preloads polymorphic" do
         users = User.all.to_a
+
+        if ActiveRecord::VERSION::MAJOR >= 5
+          # Rails 5 produces this query:
+          # (SELECT * FROM sqlite_master UNION ALL
+          # SELECT * FROM sqlite_temp_master)
+          # WHERE type='table' and name='attachments' ;
+          Attachment.count
+        end
+
         assert_equal 2, users.size
         assert_queries(1) do
           users.each { |user| user.attachments.present? }
@@ -172,7 +181,7 @@ describe PredictiveLoad::Loader do
         it "preloads correctly when unscoped for eager loaded class" do
           # when eager loading inside of unscoped the private comment should show up
           Comment.unscoped do
-            expected = (ActiveRecord::VERSION::MAJOR == 4 ? 2 : 1) # we disable preloading in unscoped blocks in rails 4 because it's broken ... maybe patch coming for 5 https://github.com/rails/rails/pull/16531
+            expected = (ActiveRecord::VERSION::MAJOR >= 4 ? 2 : 1) # we disable preloading in unscoped blocks in rails 4 because it's broken ...
             assert_queries(expected) do
               @users.each { |user| user.comments.to_a.map(&:public).uniq.must_equal [true, false] }
             end
