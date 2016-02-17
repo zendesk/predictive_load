@@ -1,9 +1,9 @@
 language: ruby
 sudo: false
 cache: bundler
-bundler_args: ""
+
 branches:
-  only: [master]
+  only: master
 
 rvm:
   - 2.0.0
@@ -25,4 +25,5 @@ matrix:
       gemfile: gemfiles/rails5.0.gemfile
   fast_finish: true
 
+before_install: rm Gemfile.lock gemfiles/*.lock
 script: bundle exec rake test
