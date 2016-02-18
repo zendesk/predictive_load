@@ -3,7 +3,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["eac@zendesk.com"]
   gem.description   = "Predictive loader"
   gem.summary       = %q{}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/zendesk/predictive_load"
   gem.license       = "Apache License Version 2.0"
 
   gem.files         = `git ls-files lib README.md LICENSE`.split($\)
