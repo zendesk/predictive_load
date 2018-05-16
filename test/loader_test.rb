@@ -42,6 +42,40 @@ describe PredictiveLoad::Loader do
         end
       end
 
+      it "preloads when first record association is nil already loaded" do
+        user = User.create!(:name => "Santa is dead")
+        Topic.first.comments.create!(:body => "cri cri", :user => user)
+
+        comment = Comment.first
+        comment.update_attributes!(user_id: nil)
+
+        refute comment.reload.user
+        assert comment.association(:user).loaded?
+
+        comments = Comment.all.to_a
+        assert_equal 3, comments.size
+        assert_queries(1) do
+          comments.each { |comment| comment.user }
+        end
+      end
+
+      it "preloads when first record association is nil and not already loaded" do
+        user = User.create!(:name => "Santa is dead")
+        Topic.first.comments.create!(:body => "cri cri", :user => user)
+
+        comment = Comment.first
+        comment.update_attributes!(user_id: nil)
+
+        comment.reload
+        refute comment.association(:user).loaded?
+
+        comments = Comment.all.to_a
+        assert_equal 3, comments.size
+        assert_queries(1) do
+          comments.each { |comment| comment.user }
+        end
+      end
+
       it "preloads with static conditions" do
         skip "Unsupported syntax" if ActiveRecord::VERSION::STRING > "4.1.0"
         comments = Comment.all.to_a
