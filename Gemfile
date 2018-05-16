@@ -1,1 +1,1 @@
-eval_gemfile(File.expand_path('gemfiles/rails3.2.gemfile', __dir__))
+eval_gemfile('gemfiles/rails3.2.gemfile')
