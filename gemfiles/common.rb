@@ -4,7 +4,6 @@ gemspec path: Bundler.root.sub('/gemfiles', '')
 
 gem 'minitest'
 gem 'minitest-rg'
-gem 'sqlite3'
 gem 'rake'
 gem 'bump'
 gem 'wwtd'
