@@ -1,0 +1,4 @@
+eval_gemfile('common.rb')
+
+gem 'activerecord', '~> 5.1.1', :require=> 'active_record'
+gem 'sqlite3'
