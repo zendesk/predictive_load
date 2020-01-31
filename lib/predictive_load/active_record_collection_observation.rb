@@ -2,14 +2,14 @@ module PredictiveLoad::ActiveRecordCollectionObservation
 
   def self.included(base)
     if ActiveRecord::VERSION::MAJOR >= 5
-      ActiveRecord::Relation.send(:include, Rails5RelationObservation)
+      ActiveRecord::Relation.include Rails5RelationObservation
     else
-      ActiveRecord::Relation.send(:include, RelationObservation)
+      ActiveRecord::Relation.include RelationObservation
     end
-    ActiveRecord::Base.send(:include, CollectionMember)
-    ActiveRecord::Base.send(:extend, UnscopedTracker)
-    ActiveRecord::Associations::Association.send(:include, AssociationNotification)
-    ActiveRecord::Associations::CollectionAssociation.send(:include, CollectionAssociationNotification)
+    ActiveRecord::Base.include CollectionMember
+    ActiveRecord::Base.extend UnscopedTracker
+    ActiveRecord::Associations::Association.include AssociationNotification
+    ActiveRecord::Associations::CollectionAssociation.include CollectionAssociationNotification
   end
 
   module Rails5RelationObservation
