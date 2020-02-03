@@ -11,4 +11,5 @@ Gem::Specification.new do |gem|
   gem.version       = '0.4.2'
 
   gem.add_runtime_dependency "activerecord", ">= 4.2.0", "< 5.3"
+  gem.required_ruby_version = ">= 2.4"
 end

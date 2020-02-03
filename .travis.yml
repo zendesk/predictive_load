@@ -17,7 +17,6 @@ gemfile:
  - gemfiles/rails5.2.gemfile
 
 matrix:
-  exclude:
   fast_finish: true
 
 before_install: rm Gemfile.lock gemfiles/*.lock
