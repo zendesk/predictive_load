@@ -1,21 +1,12 @@
 require_relative 'helper'
-
-if ActiveRecord::VERSION::STRING >= "4.1.0"
-  describe "PredictiveLoad::Watcher" do
-    it "does not work" do
-      skip "does not work"
-    end
-  end
-else
-
-require 'predictive_load/watcher'
+require 'predictive_load/loader'
 
 describe PredictiveLoad::ActiveRecordCollectionObservation do
 
   describe "Relation#to_a" do
     before do
-      user1 = User.create!(:name => "Rudolph")
-      user2 = User.create!(:name => "Santa")
+      User.create!(name: "Rudolph")
+      User.create!(name: "Santa")
     end
 
     after do
@@ -24,7 +15,7 @@ describe PredictiveLoad::ActiveRecordCollectionObservation do
 
     describe "when a collection observer is specified" do
       before do
-        ActiveRecord::Relation.collection_observer = PredictiveLoad::Watcher
+        ActiveRecord::Relation.collection_observer = PredictiveLoad::Loader
       end
 
       it "observes the members of that collection" do
@@ -50,5 +41,4 @@ describe PredictiveLoad::ActiveRecordCollectionObservation do
 
   end
 
-end
 end
