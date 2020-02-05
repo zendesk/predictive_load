@@ -1,31 +1,40 @@
 module PredictiveLoad::ActiveRecordCollectionObservation
 
   def self.included(base)
-    ActiveRecord::Relation.send(:include, RelationObservation)
-    ActiveRecord::Base.send(:include, CollectionMember)
-    ActiveRecord::Base.send(:extend, UnscopedTracker)
-    ActiveRecord::Associations::Association.send(:include, AssociationNotification)
-    ActiveRecord::Associations::CollectionAssociation.send(:include, CollectionAssociationNotification)
+    ActiveRecord::Relation.class_attribute :collection_observer
+    if ActiveRecord::VERSION::MAJOR >= 5
+      ActiveRecord::Relation.prepend Rails5RelationObservation
+    else
+      ActiveRecord::Relation.prepend Rails4RelationObservation
+    end
+    ActiveRecord::Base.include CollectionMember
+    ActiveRecord::Base.extend UnscopedTracker
+    ActiveRecord::Associations::Association.include AssociationNotification
+    ActiveRecord::Associations::CollectionAssociation.include CollectionAssociationNotification
   end
 
-  module RelationObservation
-
-    def self.included(base)
-      base.class_attribute :collection_observer
-      base.send(:alias_method, :to_a_without_collection_observer, :to_a)
-      base.send(:alias_method, :to_a, :to_a_with_collection_observer)
-    end
-
-    def to_a_with_collection_observer
-      records = to_a_without_collection_observer
-
-      if records.size > 1 && collection_observer
-        collection_observer.observe(records.dup)
+  module Rails5RelationObservation
+    # this essentially intercepts the enumerable methods that would result in n+1s since most of
+    # those are delegated to :records in Rails 5+ in the ActiveRecord::Relation::Delegation module
+    def records
+      record_array = super
+      if record_array.size > 1 && collection_observer
+        collection_observer.observe(record_array.dup)
       end
-
-      records
+      record_array
     end
+  end
 
+  module Rails4RelationObservation
+    # this essentially intercepts the enumerable methods that would result in n+1s since most of
+    # those are delegated to :to_a in Rails 5+ in the ActiveRecord::Relation::Delegation module
+    def to_a
+      record_array = super
+      if record_array.size > 1 && collection_observer
+        collection_observer.observe(record_array.dup)
+      end
+      record_array
+    end
   end
 
   module CollectionMember
