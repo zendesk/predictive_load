@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gemspec path: Bundler.root.sub('/gemfiles', '')
+gemspec path: '..'
 
 gem 'minitest'
 gem 'minitest-rg'

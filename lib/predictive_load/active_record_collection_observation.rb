@@ -9,8 +9,8 @@ module PredictiveLoad::ActiveRecordCollectionObservation
     end
     ActiveRecord::Base.include CollectionMember
     ActiveRecord::Base.extend UnscopedTracker
-    ActiveRecord::Associations::Association.include AssociationNotification
-    ActiveRecord::Associations::CollectionAssociation.include CollectionAssociationNotification
+    ActiveRecord::Associations::Association.prepend AssociationNotification
+    ActiveRecord::Associations::CollectionAssociation.prepend CollectionAssociationNotification
   end
 
   module Rails5RelationObservation
@@ -66,16 +66,10 @@ module PredictiveLoad::ActiveRecordCollectionObservation
   end
 
   module AssociationNotification
-
-    def self.included(base)
-      base.send(:alias_method, :load_target_without_notification, :load_target)
-      base.send(:alias_method, :load_target, :load_target_with_notification)
-    end
-
-    def load_target_with_notification
+    def load_target
       notify_collection_observer if find_target?
 
-      load_target_without_notification
+      super
     end
 
     protected
@@ -85,22 +79,14 @@ module PredictiveLoad::ActiveRecordCollectionObservation
         @owner.collection_observer.loading_association(@owner, self)
       end
     end
-
   end
 
   module CollectionAssociationNotification
-
-    def self.included(base)
-      base.send(:alias_method, :load_target_without_notification, :load_target)
-      base.send(:alias_method, :load_target, :load_target_with_notification)
-    end
-
-    def load_target_with_notification
+    def load_target
       notify_collection_observer if find_target?
 
-      load_target_without_notification
+      super
     end
-
   end
 
 end
