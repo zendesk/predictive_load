@@ -1,0 +1,48 @@
+name: Security
+on: [push]
+jobs:
+  main:
+    name: bundle-audit
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        gemfile:
+          - gemfiles/rails4.2.gemfile
+          - gemfiles/rails5.0.gemfile
+          - gemfiles/rails5.1.gemfile
+          - gemfiles/rails5.2.gemfile
+    steps:
+    - uses: zendesk/checkout@v2
+    - uses: zendesk/setup-ruby@v1
+      with:
+        ruby-version: 2.6.6
+    - name: Installing bundler-audit
+      run: |
+        set -eu -o pipefail
+
+        gem install bundler-audit
+
+    - name: Checking ${{ matrix.gemfile }}
+      run: |
+        set -eu -o pipefail
+
+        echo "BUNDLE_GEMFILE=$GITHUB_WORKSPACE/${{ matrix.gemfile }}" >> $GITHUB_ENV
+
+        case ${{ matrix.gemfile }} in
+          gemfiles/rails4.2.gemfile)
+            IGNORED="CVE-2021-22880 CVE-2020-8165 CVE-2020-8164 CVE-2020-8166 CVE-2021-22885 CVE-2021-22904 CVE-2020-15169 CVE-2020-5267 CVE-2020-8163 CVE-2020-8167 CVE-2020-8161 CVE-2020-8184"
+            ;;
+          gemfiles/rails5.1.gemfile)
+            IGNORED="CVE-2021-22880 CVE-2020-8165 CVE-2020-8164 CVE-2020-8166 CVE-2021-22885 CVE-2021-22904 CVE-2020-15169 CVE-2020-5267 CVE-2020-8167"
+            ;;
+          *)
+            IGNORED=""
+            ;;
+        esac
+
+        if [ -n "$IGNORED" ]; then
+          echo "::warning:: Ignored vulnerabilities: $IGNORED"
+        fi
+
+        bundle-audit check --update --gemfile-lock ${{ matrix.gemfile }}.lock --ignore $IGNORED
