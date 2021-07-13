@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/zendesk/predictive_load/actions/workflows/actions.yml/badge.svg?branch=master)](https://github.com/zendesk/predictive_load/actions)
+[![Build Status](https://github.com/zendesk/predictive_load/actions/workflows/actions.yml/badge.svg?branch=master)](https://github.com/zendesk/predictive_load/actions/workflows/actions.yml)
 
 
 predictive_load
