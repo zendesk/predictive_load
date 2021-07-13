@@ -217,7 +217,7 @@ describe PredictiveLoad::Loader do
           Comment.unscoped do
             expected = (ActiveRecord::VERSION::MAJOR >= 4 ? 2 : 1) # we disable preloading in unscoped blocks in rails 4 because it's broken ...
             assert_queries(expected) do
-              @users.each { |user| user.comments.to_a.map(&:public).uniq.must_equal [true, false] }
+              @users.each { |user| _(user.comments.to_a.map(&:public).uniq).must_equal [true, false] }
             end
           end
         end
@@ -225,7 +225,7 @@ describe PredictiveLoad::Loader do
         it "preloads correctly when unscoped for a different class" do
           User.unscoped do
             assert_queries(1) do
-              @users.each { |user| user.comments.to_a.map(&:public).uniq.must_equal [true] }
+              @users.each { |user| _(user.comments.to_a.map(&:public).uniq).must_equal [true] }
             end
           end
         end
