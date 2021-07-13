@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/eac/predictive_load.png)](https://travis-ci.org/eac/predictive_load)
+[![Build Status](https://github.com/zendesk/predictive_load/actions/workflows/actions.yml/badge.svg?branch=master)](https://github.com/zendesk/predictive_load/actions/workflows/actions.yml)
+
 
 predictive_load
 ===============
