@@ -20,6 +20,12 @@ case $GEMFILE in
   gemfiles/rails5.2.gemfile)
     IGNORED=""
     ;;
+  gemfiles/rails6.0.gemfile)
+    IGNORED=""
+    ;;
+  gemfiles/rails6.1.gemfile)
+    IGNORED=""
+    ;;
   *)
     echo unsupported gemfile: $GEMFILE
     exit 1

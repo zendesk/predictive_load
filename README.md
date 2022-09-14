@@ -14,7 +14,7 @@ Observes Active Record collections and notifies when a member loads an associati
 ```ruby
 require 'predictive_load'
 require 'predictive_load/active_record_collection_observation'
-ActiveRecord::Base.send(:include, PredictiveLoad::ActiveRecordCollectionObservation)
+ActiveRecord::Base.include(PredictiveLoad::ActiveRecordCollectionObservation)
 
 require 'predictive_load/loader'
 
