@@ -76,24 +76,6 @@ describe PredictiveLoad::Loader do
         end
       end
 
-      it "preloads with static conditions" do
-        skip "Unsupported syntax"
-        comments = Comment.all.to_a
-        assert_equal 2, comments.size
-        assert_queries(1) do
-          comments.each { |comment| assert comment.user_with_static_conditions.name }
-        end
-      end
-
-      it "does not attempt to preload associations with proc conditions" do
-        skip "Unsupported syntax"
-        comments = Comment.all.to_a
-        assert_equal 2, comments.size
-        assert_queries(2) do
-          comments.each { |comment| assert comment.user_by_proc.full_name }
-        end
-      end
-
       it "does not attempt to preload associations with proc that has arguments / uses instance" do
         comments = Comment.all.to_a
         assert_equal 2, comments.size
@@ -232,14 +214,6 @@ describe PredictiveLoad::Loader do
           topic = Topic.first
           assert_queries(2) do
             users.each { |user| user.comments.by_topic(topic).to_a }
-          end
-        end
-
-        it "does not preload when staticly scoped" do
-          skip "this only caches on rails 4.0 ... and is removed in rails 4.1+"
-          users = User.all.to_a
-          assert_queries(2) do
-            users.each { |user| user.comments.recent.to_a }
           end
         end
 
