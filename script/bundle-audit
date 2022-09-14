@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -eu
+
+GEMFILE="$1"
+
+gem install bundler-audit
+
+case $GEMFILE in
+
+  gemfiles/rails4.2.gemfile)
+    IGNORED="CVE-2021-22880 CVE-2022-32224 CVE-2020-8165"
+    ;;
+  gemfiles/rails5.0.gemfile)
+    IGNORED="CVE-2021-22880 CVE-2022-32224 CVE-2020-8165"
+    ;;
+  gemfiles/rails5.1.gemfile)
+    IGNORED="CVE-2021-22880 CVE-2022-32224 CVE-2020-8165"
+    ;;
+  gemfiles/rails5.2.gemfile)
+    IGNORED=""
+    ;;
+  *)
+    echo unsupported gemfile: $GEMFILE
+    exit 1
+    ;;
+esac
+
+if [ -n "$IGNORED" ]; then
+  echo "::warning:: Ignored vulnerabilities: $IGNORED"
+  bundle-audit check --update --gemfile-lock $GEMFILE.lock --ignore $IGNORED
+else
+  bundle-audit check --update --gemfile-lock $GEMFILE.lock
+fi
