@@ -56,19 +56,26 @@ module PredictiveLoad
       true
     end
 
-    def preload(association_name)
-      # https://github.com/rails/rails/blob/v4.2.10/activerecord/lib/active_record/associations/preloader.rb#L187 (similar to other Rails versions)
-      # If the first record association is loaded, Preloader aborts.
-      #
-      # In a code like `comments.each { |c| c.user }, if the first comment user_id is nil,
-      # when calling the method (`user`) ActiveRecord doesn't load the association, but marks it as loaded.
-      # So when the second comment calls `user` (and user_id is not nil), @records.first will be the first
-      # comment above (with thr association already loaded), which will be checked by Preloader and used to skip
-      # any preloading.
-      #
-      # Fix is pretty simple, ignore any record with association already loaded.
-      rs = records_with_association(association_name).reject { |r| r.association(association_name).loaded? }
-      ActiveRecord::Associations::Preloader.new.preload(rs, [ association_name ])
+    # https://github.com/rails/rails/blob/v4.2.10/activerecord/lib/active_record/associations/preloader.rb#L187 (similar to other Rails versions)
+    # If the first record association is loaded, Preloader aborts.
+    #
+    # In a code like `comments.each { |c| c.user }, if the first comment user_id is nil,
+    # when calling the method (`user`) ActiveRecord doesn't load the association, but marks it as loaded.
+    # So when the second comment calls `user` (and user_id is not nil), @records.first will be the first
+    # comment above (with thr association already loaded), which will be checked by Preloader and used to skip
+    # any preloading.
+    #
+    # Fix is pretty simple, ignore any record with association already loaded.
+    if ActiveRecord::VERSION::MAJOR >= 7
+      def preload(association_name)
+        rs = records_with_association(association_name).reject { |r| r.association(association_name).loaded? }
+        ActiveRecord::Associations::Preloader.new(records: rs, associations: [association_name]).call
+      end
+    else
+      def preload(association_name)
+        rs = records_with_association(association_name).reject { |r| r.association(association_name).loaded? }
+        ActiveRecord::Associations::Preloader.new.preload(rs, [ association_name ])
+      end
     end
 
     def records_with_association(association_name)

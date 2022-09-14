@@ -22,6 +22,7 @@ jobs:
           - gemfiles/rails5.2.gemfile
           - gemfiles/rails6.0.gemfile
           - gemfiles/rails6.1.gemfile
+          - gemfiles/rails7.0.gemfile
         exclude:
           - {ruby: 2.7.1, gemfile: 'gemfiles/rails4.2.gemfile'} # NoMethodError: undefined method `new' for BigDecimal:Class
           - {ruby: 2.6.6, gemfile: 'gemfiles/rails7.0.gemfile'}
