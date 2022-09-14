@@ -47,7 +47,7 @@ describe PredictiveLoad::Loader do
         Topic.first.comments.create!(:body => "cri cri", :user => user)
 
         comment = Comment.first
-        comment.update_attributes!(user_id: nil)
+        comment.update!(user_id: nil)
 
         refute comment.reload.user
         assert comment.association(:user).loaded?
@@ -64,7 +64,7 @@ describe PredictiveLoad::Loader do
         Topic.first.comments.create!(:body => "cri cri", :user => user)
 
         comment = Comment.first
-        comment.update_attributes!(user_id: nil)
+        comment.update!(user_id: nil)
 
         comment.reload
         refute comment.association(:user).loaded?
