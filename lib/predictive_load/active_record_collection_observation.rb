@@ -45,18 +45,16 @@ module PredictiveLoad::ActiveRecordCollectionObservation
 
   # disable eager loading since includes + unscoped is broken on rails 4
   module UnscopedTracker
-    if ActiveRecord::VERSION::MAJOR >= 4
-      def unscoped
-        if block_given?
-          begin
-            predictive_load_disabled << self
-            super
-          ensure
-            predictive_load_disabled.pop
-          end
-        else
+    def unscoped
+      if block_given?
+        begin
+          predictive_load_disabled << self
           super
+        ensure
+          predictive_load_disabled.pop
         end
+      else
+        super
       end
     end
 

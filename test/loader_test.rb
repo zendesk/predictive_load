@@ -77,7 +77,7 @@ describe PredictiveLoad::Loader do
       end
 
       it "preloads with static conditions" do
-        skip "Unsupported syntax" if ActiveRecord::VERSION::STRING > "4.1.0"
+        skip "Unsupported syntax"
         comments = Comment.all.to_a
         assert_equal 2, comments.size
         assert_queries(1) do
@@ -86,7 +86,7 @@ describe PredictiveLoad::Loader do
       end
 
       it "does not attempt to preload associations with proc conditions" do
-        skip "Unsupported syntax" if ActiveRecord::VERSION::STRING > "4.1.0"
+        skip "Unsupported syntax"
         comments = Comment.all.to_a
         assert_equal 2, comments.size
         assert_queries(2) do
@@ -95,7 +95,6 @@ describe PredictiveLoad::Loader do
       end
 
       it "does not attempt to preload associations with proc that has arguments / uses instance" do
-        skip "Unsupported syntax" if ActiveRecord::VERSION::MAJOR == 3
         comments = Comment.all.to_a
         assert_equal 2, comments.size
         assert_queries(2) do
@@ -104,7 +103,6 @@ describe PredictiveLoad::Loader do
       end
 
       it "does attempt to preload associations with proc that have no arguments / does not use instance" do
-        skip "Unsupported syntax" if ActiveRecord::VERSION::MAJOR == 3
         comments = Comment.all.to_a
         assert_equal 2, comments.size
         assert_queries(1) do
@@ -154,9 +152,7 @@ describe PredictiveLoad::Loader do
         assert_equal 3, users.size
         users.each { |user| EmailsUser.create!(user_id: user.id, email_id: Email.create!.id) }
 
-        expected = (ActiveRecord::VERSION::STRING < "4.1.0" ? 1 : 2) # did a join before, now does 2 queries
-
-        assert_queries(expected) do
+        assert_queries(2) do
           users.each { |user| user.emails.to_a }
         end
       end
@@ -215,8 +211,7 @@ describe PredictiveLoad::Loader do
         it "preloads correctly when unscoped for eager loaded class" do
           # when eager loading inside of unscoped the private comment should show up
           Comment.unscoped do
-            expected = (ActiveRecord::VERSION::MAJOR >= 4 ? 2 : 1) # we disable preloading in unscoped blocks in rails 4 because it's broken ...
-            assert_queries(expected) do
+            assert_queries(2) do
               @users.each { |user| _(user.comments.to_a.map(&:public).uniq).must_equal [true, false] }
             end
           end
@@ -241,7 +236,7 @@ describe PredictiveLoad::Loader do
         end
 
         it "does not preload when staticly scoped" do
-          skip "this only caches on rails 4.0 ... and is removed in rails 4.1+" if ActiveRecord::VERSION::STRING >= "4.0.0"
+          skip "this only caches on rails 4.0 ... and is removed in rails 4.1+"
           users = User.all.to_a
           assert_queries(2) do
             users.each { |user| user.comments.recent.to_a }
@@ -249,7 +244,6 @@ describe PredictiveLoad::Loader do
         end
 
         it "does not preload when block scoped" do
-          skip "Unsupported syntax" if ActiveRecord::VERSION::MAJOR == 3
           users = User.all.to_a
           assert_queries(2) do
             users.each { |user| user.comments.recent_v2.to_a }

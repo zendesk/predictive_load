@@ -43,7 +43,7 @@ module PredictiveLoad
       return false if ActiveRecord::Base.predictive_load_disabled.include?(association.klass)
       return false if association.reflection.options[:predictive_load] == false
       return false if association.reflection.options[:conditions].respond_to?(:to_proc) # rails 3 conditions proc (we do not know if it uses instance methods)
-      if ActiveRecord::VERSION::MAJOR > 3 && scope = association.reflection.scope
+      if scope = association.reflection.scope
         if scope.is_a?(Proc)
           # rails 4+ conditions block, if it uses a passed in object, we assume it is not preloadable
           return false if scope.arity.to_i > 0
@@ -68,11 +68,7 @@ module PredictiveLoad
       #
       # Fix is pretty simple, ignore any record with association already loaded.
       rs = records_with_association(association_name).reject { |r| r.association(association_name).loaded? }
-      if ActiveRecord::VERSION::STRING <= "4.1.0"
-        ActiveRecord::Associations::Preloader.new(rs, [ association_name ]).run
-      else
-        ActiveRecord::Associations::Preloader.new.preload(rs, [ association_name ])
-      end
+      ActiveRecord::Associations::Preloader.new.preload(rs, [ association_name ])
     end
 
     def records_with_association(association_name)

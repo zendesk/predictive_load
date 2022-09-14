@@ -24,22 +24,11 @@ class Comment < ActiveRecord::Base
   default_scope { where(public: true) }
   belongs_to :user
 
-  unless ActiveRecord::VERSION::STRING > "4.1.0"
-    ActiveSupport::Deprecation.silence do
-      block = (ActiveRecord::VERSION::MAJOR == 3 ? proc { "1 = #{one}" } : proc { |object| "1 = #{object.one}" })
-      belongs_to :user_by_proc, :class_name => "User", :foreign_key => :user_id, :conditions => block
+  belongs_to :user_by_proc_v2,
+    proc { |object| where("1 = #{object.one}") }, :class_name => "User", :foreign_key => :user_id
 
-      belongs_to :user_with_static_conditions, :class_name => "User", :foreign_key => :user_id, :conditions => "1 = 1"
-    end
-  end
-
-  if ActiveRecord::VERSION::MAJOR > 3
-    belongs_to :user_by_proc_v2,
-      proc { |object| where("1 = #{ActiveRecord::VERSION::MAJOR == 3 ? one : object.one}") }, :class_name => "User", :foreign_key => :user_id
-
-    belongs_to :user_by_proc_v2_no_args,
-      proc { where("1 = 1") }, :class_name => "User", :foreign_key => :user_id
-  end
+  belongs_to :user_by_proc_v2_no_args,
+    proc { where("1 = 1") }, :class_name => "User", :foreign_key => :user_id
 
   belongs_to :user_no_preload,
     :class_name => "User", :foreign_key => :user_id, :predictive_load => false
@@ -47,11 +36,7 @@ class Comment < ActiveRecord::Base
   belongs_to :topic
 
   scope :by_topic, lambda { |topic| where(:topic_id => topic.id) }
-  if ActiveRecord::VERSION::MAJOR == 3
-    scope :recent, order('updated_at desc')
-  else
-    scope :recent, -> { order('updated_at desc') }
-  end
+  scope :recent, -> { order('updated_at desc') }
   scope :recent_v2, lambda { order('updated_at desc') }
 
   def one
