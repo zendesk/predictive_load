@@ -45,4 +45,3 @@ has_many :foos, predictive_load: false
 
 * Calling association#size will trigger an N+1 on SELECT COUNT(*). Work around by calling #length, loading all records.
 * Calling first / last will trigger an N+1.
-* Rails 4: unscoped will disable eager loading to circument a rails bug ... hopefully fixed in rails 5 https://github.com/rails/rails/pull/16531
