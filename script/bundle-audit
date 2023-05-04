@@ -8,20 +8,8 @@ gem install bundler-audit
 
 case $GEMFILE in
 
-  gemfiles/rails4.2.gemfile)
-    IGNORED="CVE-2021-22880 CVE-2022-32224 CVE-2020-8165"
-    ;;
-  gemfiles/rails5.0.gemfile)
-    IGNORED="CVE-2021-22880 CVE-2022-32224 CVE-2020-8165"
-    ;;
-  gemfiles/rails5.1.gemfile)
-    IGNORED="CVE-2021-22880 CVE-2022-32224 CVE-2020-8165"
-    ;;
-  gemfiles/rails5.2.gemfile)
-    IGNORED=""
-    ;;
   gemfiles/rails6.0.gemfile)
-    IGNORED=""
+    IGNORED="CVE-2023-28120 CVE-2022-44566 CVE-2023-22796"
     ;;
   gemfiles/rails6.1.gemfile)
     IGNORED=""

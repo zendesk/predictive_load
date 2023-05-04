@@ -24,7 +24,7 @@ require_relative 'models'
 def assert_queries(num = 1)
   old = QueryDiet::Logger.queries.dup
   result = yield
-  new = QueryDiet::Logger.queries[old.size..-1]
+  new = QueryDiet::Logger.queries[old.size..]
   assert_equal num, new.size, "#{new.size} instead of #{num} queries were executed.#{new.size == 0 ? '' : "\nQueries:\n#{new.map(&:first).join("\n")}"}"
   result
 end
