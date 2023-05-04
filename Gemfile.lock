@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    predictive_load (0.6.0)
+    predictive_load (0.7.0)
       activerecord (>= 6.0, < 7.1)
 
 GEM
