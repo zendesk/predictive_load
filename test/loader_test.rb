@@ -2,6 +2,11 @@ require_relative "helper"
 require "predictive_load/loader"
 
 describe PredictiveLoad::Loader do
+  before do
+    # Normally run without callback, to verify that its configuration is optional.
+    PredictiveLoad.callback = nil
+  end
+
   describe "A collection of records" do
     before do
       ActiveRecord::Relation.collection_observer = PredictiveLoad::Loader
@@ -99,6 +104,45 @@ describe PredictiveLoad::Loader do
           comments.each { |comment| assert comment.user_no_preload.full_name }
         end
       end
+
+      describe "the callback, when configured" do
+        before do
+          @calls = []
+          PredictiveLoad.callback = proc do |record, association|
+            @calls << [record, association]
+          end
+        end
+
+        after { PredictiveLoad.callback = nil }
+
+        it "invokes the callback once when it preloads" do
+          comments = Comment.all.to_a
+          assert_equal 2, comments.size
+
+          assert_empty @calls
+          # Preload-triggering query.
+          assert_queries(1) do
+            comments.each { |comment| assert comment.user.name }
+          end
+
+          assert_equal 1, @calls.length
+          assert_equal comments[0], @calls[0][0]
+          assert_equal comments[0].association(:user), @calls[0][1]
+        end
+
+        it "does not invoke the callback when it doesn't preloads" do
+          comments = Comment.all.to_a
+          assert_equal 2, comments.size
+
+          assert_empty @calls
+          # Preload-bypassing query.
+          assert_queries(2) do
+            comments.each { |comment| assert comment.user_by_proc_v2.full_name }
+          end
+
+          assert_empty @calls
+        end
+      end
     end
 
     describe "has_one" do
@@ -108,6 +152,45 @@ describe PredictiveLoad::Loader do
 
         assert_queries(1) do
           users.each { |user| user.photo }
+        end
+      end
+
+      describe "the callback, when configured" do
+        before do
+          @calls = []
+          PredictiveLoad.callback = proc do |record, association|
+            @calls << [record, association]
+          end
+        end
+
+        after { PredictiveLoad.callback = nil }
+
+        it "invokes the callback once when it preloads" do
+          users = User.all.to_a
+          assert_equal 2, users.size
+
+          assert_empty @calls
+          # Preload-triggering query.
+          assert_queries(1) do
+            users.each { |user| user.photo }
+          end
+
+          assert_equal 1, @calls.length
+          assert_equal users[0], @calls[0][0]
+          assert_equal users[0].association(:photo), @calls[0][1]
+        end
+
+        it "does not invoke the callback when it doesn't preloads" do
+          users = User.all.to_a
+          assert_equal 2, users.size
+
+          assert_empty @calls
+          # Preload-bypassing query.
+          assert_queries(2) do
+            users.each { |user| user.photo_no_preload }
+          end
+
+          assert_empty @calls
         end
       end
     end
@@ -236,6 +319,45 @@ describe PredictiveLoad::Loader do
           assert_queries(2) do
             users.each { |user| user.comments.first }
           end
+        end
+      end
+
+      describe "the callback, when configured" do
+        before do
+          @calls = []
+          PredictiveLoad.callback = proc do |record, association|
+            @calls << [record, association]
+          end
+        end
+
+        after { PredictiveLoad.callback = nil }
+
+        it "invokes the callback once when it preloads" do
+          users = User.all.to_a
+          assert_equal 2, users.size
+
+          assert_empty @calls
+          # Preload-triggering query.
+          assert_queries(1) do
+            users.each { |user| user.comments.to_a }
+          end
+
+          assert_equal 1, @calls.length
+          assert_equal users[0], @calls[0][0]
+          assert_equal users[0].association(:comments), @calls[0][1]
+        end
+
+        it "does not invoke the callback when it doesn't preloads" do
+          users = User.all.to_a
+          assert_equal 2, users.size
+
+          assert_empty @calls
+          # Preload-bypassing query.
+          assert_queries(2) do
+            users.each { |user| user.comments_no_preload.to_a }
+          end
+
+          assert_empty @calls
         end
       end
     end
