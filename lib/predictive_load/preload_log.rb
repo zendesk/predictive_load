@@ -16,7 +16,7 @@ module PredictiveLoad
 
           preload_sql = preloader.scope.where(collection_arel(preloader)).to_sql
 
-          log("would preload with: #{preload_sql.to_s}")
+          log("would preload with: #{preload_sql}")
           klass.connection.explain(preload_sql).each_line do |line|
             log(line)
           end

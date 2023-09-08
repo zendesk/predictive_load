@@ -4,10 +4,6 @@
 ignore:
 - lib/predictive_load/active_record_collection_observation.rb:
   - Style/SafeNavigation
-- lib/predictive_load/loader.rb:
-  - Lint/AssignmentInCondition
-- lib/predictive_load/preload_log.rb:
-  - Lint/RedundantStringCoercion
 - predictive_load.gemspec:
   - Style/PercentLiteralDelimiters
   - Style/RedundantPercentQ
