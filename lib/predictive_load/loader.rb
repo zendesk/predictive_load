@@ -74,7 +74,7 @@ module PredictiveLoad
     else
       def preload(association_name)
         rs = records_with_association(association_name).reject { |r| r.association(association_name).loaded? }
-        ActiveRecord::Associations::Preloader.new.preload(rs, [ association_name ])
+        ActiveRecord::Associations::Preloader.new.preload(rs, [association_name])
       end
     end
 

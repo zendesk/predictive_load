@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
-  has_many :comments,  :dependent => :destroy
-  has_many :topics,    :through => :comments
+  has_many :comments, :dependent => :destroy
+  has_many :topics, :through => :comments
   has_many :attachments, as: :source
-  has_one  :photo
+  has_one :photo
   has_and_belongs_to_many :emails
 
   def full_name

@@ -12,7 +12,7 @@ describe PredictiveLoad::Loader do
       user1 = User.create!(:name => "Rudolph")
       user2 = User.create!(:name => "Santa")
       user1.emails.create!
-      topic.comments.create!(:body => "meow",     :user => user1)
+      topic.comments.create!(:body => "meow", :user => user1)
       topic.comments.create!(:body => "Ho Ho ho", :user => user2)
     end
 

@@ -2,7 +2,6 @@ require "active_record/associations/preloader"
 
 module PredictiveLoad
   class PreloadLog < ActiveRecord::Associations::Preloader
-
     attr_accessor :logger
 
     def preload(association)
@@ -34,7 +33,5 @@ module PredictiveLoad
     def log(message)
       ActiveRecord::Base.logger.info("predictive_load: #{message}")
     end
-
   end
-
 end

@@ -1,5 +1,4 @@
 module PredictiveLoad::ActiveRecordCollectionObservation
-
   def self.included(base)
     ActiveRecord::Relation.class_attribute :collection_observer
     if ActiveRecord::VERSION::MAJOR >= 5
@@ -38,9 +37,7 @@ module PredictiveLoad::ActiveRecordCollectionObservation
   end
 
   module CollectionMember
-
     attr_accessor :collection_observer
-
   end
 
   # disable eager loading since includes + unscoped is broken on rails 4
@@ -86,5 +83,4 @@ module PredictiveLoad::ActiveRecordCollectionObservation
       super
     end
   end
-
 end
