@@ -1,5 +1,5 @@
-require_relative 'helper'
-require 'predictive_load/loader'
+require_relative "helper"
+require "predictive_load/loader"
 
 describe PredictiveLoad::Loader do
   describe "A collection of records" do
@@ -129,7 +129,7 @@ describe PredictiveLoad::Loader do
 
     describe "has_and_belongs_to_many" do
       it "automatically preloads" do
-        User.create!(name: 'ddd')
+        User.create!(name: "ddd")
         users = User.all.to_a
         assert_equal 3, users.size
         users.each { |user| EmailsUser.create!(user_id: user.id, email_id: Email.create!.id) }

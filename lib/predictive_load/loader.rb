@@ -32,7 +32,7 @@ module PredictiveLoad
     attr_reader :records
 
     def all_records_will_likely_load_association?(association_name)
-      if defined?(Mocha) && association_name.to_s.index('_stub_')
+      if defined?(Mocha) && association_name.to_s.index("_stub_")
         false
       else
         true

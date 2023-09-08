@@ -36,8 +36,8 @@ class Comment < ActiveRecord::Base
   belongs_to :topic
 
   scope :by_topic, lambda { |topic| where(:topic_id => topic.id) }
-  scope :recent, -> { order('updated_at desc') }
-  scope :recent_v2, lambda { order('updated_at desc') }
+  scope :recent, -> { order("updated_at desc") }
+  scope :recent_v2, lambda { order("updated_at desc") }
 
   def one
     1

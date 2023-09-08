@@ -1,5 +1,5 @@
-require_relative 'helper'
-require 'predictive_load/loader'
+require_relative "helper"
+require "predictive_load/loader"
 
 describe PredictiveLoad::ActiveRecordCollectionObservation do
 

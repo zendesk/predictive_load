@@ -1,11 +1,11 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gemspec path: '..'
+gemspec path: ".."
 
-gem 'minitest'
-gem 'minitest-rg'
-gem 'rake'
-gem 'bump'
-gem 'query_diet'
-gem 'byebug'
-gem 'standard'
+gem "minitest"
+gem "minitest-rg"
+gem "rake"
+gem "bump"
+gem "query_diet"
+gem "byebug"
+gem "standard"

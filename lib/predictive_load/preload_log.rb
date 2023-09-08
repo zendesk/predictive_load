@@ -1,4 +1,4 @@
-require 'active_record/associations/preloader'
+require "active_record/associations/preloader"
 
 module PredictiveLoad
   class PreloadLog < ActiveRecord::Associations::Preloader
