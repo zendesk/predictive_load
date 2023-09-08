@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
-  has_many :comments, :dependent => :destroy
-  has_many :topics, :through => :comments
+  has_many :comments, dependent: :destroy
+  has_many :topics, through: :comments
   has_many :attachments, as: :source
   has_one :photo
   has_and_belongs_to_many :emails
@@ -17,7 +17,7 @@ class EmailsUser < ActiveRecord::Base
 end
 
 class Topic < ActiveRecord::Base
-  has_many :comments, :dependent => :destroy
+  has_many :comments, dependent: :destroy
 end
 
 class Comment < ActiveRecord::Base
@@ -25,17 +25,17 @@ class Comment < ActiveRecord::Base
   belongs_to :user
 
   belongs_to :user_by_proc_v2,
-    proc { |object| where("1 = #{object.one}") }, :class_name => "User", :foreign_key => :user_id
+    proc { |object| where("1 = #{object.one}") }, class_name: "User", foreign_key: :user_id
 
   belongs_to :user_by_proc_v2_no_args,
-    proc { where("1 = 1") }, :class_name => "User", :foreign_key => :user_id
+    proc { where("1 = 1") }, class_name: "User", foreign_key: :user_id
 
   belongs_to :user_no_preload,
-    :class_name => "User", :foreign_key => :user_id, :predictive_load => false
+    class_name: "User", foreign_key: :user_id, predictive_load: false
 
   belongs_to :topic
 
-  scope :by_topic, lambda { |topic| where(:topic_id => topic.id) }
+  scope :by_topic, lambda { |topic| where(topic_id: topic.id) }
   scope :recent, -> { order("updated_at desc") }
   scope :recent_v2, lambda { order("updated_at desc") }
 

@@ -8,12 +8,12 @@ describe PredictiveLoad::Loader do
       # trigger schema lookup to avoid messing with query count assertions
       Photo.columns
 
-      topic = Topic.create!(:title => "Sleigh repairs")
-      user1 = User.create!(:name => "Rudolph")
-      user2 = User.create!(:name => "Santa")
+      topic = Topic.create!(title: "Sleigh repairs")
+      user1 = User.create!(name: "Rudolph")
+      user2 = User.create!(name: "Santa")
       user1.emails.create!
-      topic.comments.create!(:body => "meow", :user => user1)
-      topic.comments.create!(:body => "Ho Ho ho", :user => user2)
+      topic.comments.create!(body: "meow", user: user1)
+      topic.comments.create!(body: "Ho Ho ho", user: user2)
     end
 
     after do
@@ -43,8 +43,8 @@ describe PredictiveLoad::Loader do
       end
 
       it "preloads when first record association is nil already loaded" do
-        user = User.create!(:name => "Santa is dead")
-        Topic.first.comments.create!(:body => "cri cri", :user => user)
+        user = User.create!(name: "Santa is dead")
+        Topic.first.comments.create!(body: "cri cri", user: user)
 
         comment = Comment.first
         comment.update!(user_id: nil)
@@ -60,8 +60,8 @@ describe PredictiveLoad::Loader do
       end
 
       it "preloads when first record association is nil and not already loaded" do
-        user = User.create!(:name => "Santa is dead")
-        Topic.first.comments.create!(:body => "cri cri", :user => user)
+        user = User.create!(name: "Santa is dead")
+        Topic.first.comments.create!(body: "cri cri", user: user)
 
         comment = Comment.first
         comment.update!(user_id: nil)

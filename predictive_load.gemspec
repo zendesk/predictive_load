@@ -2,7 +2,7 @@ Gem::Specification.new do |gem|
   gem.authors = ["Eric Chapweske"]
   gem.email = ["eac@zendesk.com"]
   gem.description = "Predictive loader"
-  gem.summary = %q{}
+  gem.summary = ""
   gem.homepage = "https://github.com/zendesk/predictive_load"
   gem.license = "Apache License Version 2.0"
 
