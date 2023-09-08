@@ -1,8 +1,7 @@
-require_relative 'helper'
-require 'predictive_load/loader'
+require_relative "helper"
+require "predictive_load/loader"
 
 describe PredictiveLoad::ActiveRecordCollectionObservation do
-
   describe "Relation#to_a" do
     before do
       User.create!(name: "Rudolph")
@@ -23,7 +22,6 @@ describe PredictiveLoad::ActiveRecordCollectionObservation do
         assert_equal 2, users.size
         assert users.all? { |user| user.collection_observer }
       end
-
     end
 
     describe "when a collection observer is not specified" do
@@ -36,9 +34,6 @@ describe PredictiveLoad::ActiveRecordCollectionObservation do
         assert_equal 2, users.size, users.inspect
         assert users.none? { |user| user.collection_observer }
       end
-
     end
-
   end
-
 end

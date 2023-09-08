@@ -32,7 +32,7 @@ module PredictiveLoad
     attr_reader :records
 
     def all_records_will_likely_load_association?(association_name)
-      if defined?(Mocha) && association_name.to_s.index('_stub_')
+      if defined?(Mocha) && association_name.to_s.index("_stub_")
         false
       else
         true
@@ -43,11 +43,11 @@ module PredictiveLoad
       return false if ActiveRecord::Base.predictive_load_disabled.include?(association.klass)
       return false if association.reflection.options[:predictive_load] == false
       return false if association.reflection.options[:conditions].respond_to?(:to_proc) # rails 3 conditions proc (we do not know if it uses instance methods)
-      if scope = association.reflection.scope
+      if (scope = association.reflection.scope)
         if scope.is_a?(Proc)
           # rails 4+ conditions block, if it uses a passed in object, we assume it is not preloadable
           return false if scope.arity.to_i > 0
-        elsif where = scope.options[:where]
+        elsif (where = scope.options[:where])
           # ActiveRecord::Associations::Builder::DeprecatedOptionsProc from rails 4.0 and deprecated finders
           # when conditions was a proc the where will be a proc too -> check arity
           return false if where.is_a?(Proc) && where.arity > 0
@@ -74,7 +74,7 @@ module PredictiveLoad
     else
       def preload(association_name)
         rs = records_with_association(association_name).reject { |r| r.association(association_name).loaded? }
-        ActiveRecord::Associations::Preloader.new.preload(rs, [ association_name ])
+        ActiveRecord::Associations::Preloader.new.preload(rs, [association_name])
       end
     end
 

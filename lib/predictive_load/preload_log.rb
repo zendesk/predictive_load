@@ -1,8 +1,7 @@
-require 'active_record/associations/preloader'
+require "active_record/associations/preloader"
 
 module PredictiveLoad
   class PreloadLog < ActiveRecord::Associations::Preloader
-
     attr_accessor :logger
 
     def preload(association)
@@ -17,7 +16,7 @@ module PredictiveLoad
 
           preload_sql = preloader.scope.where(collection_arel(preloader)).to_sql
 
-          log("would preload with: #{preload_sql.to_s}")
+          log("would preload with: #{preload_sql}")
           klass.connection.explain(preload_sql).each_line do |line|
             log(line)
           end
@@ -34,7 +33,5 @@ module PredictiveLoad
     def log(message)
       ActiveRecord::Base.logger.info("predictive_load: #{message}")
     end
-
   end
-
 end

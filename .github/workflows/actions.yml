@@ -24,8 +24,8 @@ jobs:
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:
-      - uses: zendesk/checkout@v3
-      - uses: zendesk/setup-ruby@v1
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
@@ -34,10 +34,10 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: zendesk/checkout@v3
-      - uses: zendesk/setup-ruby@v1
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: '2.7'
           bundler-cache: true
-      - name: rubocop
-        run: bundle exec rubocop
+      - name: StandardRb
+        run: bundle exec standardrb
