@@ -29,7 +29,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: test
+      - name: rake test
         run: bundle exec rake test
   validate:
     runs-on: ubuntu-latest
@@ -39,5 +39,5 @@ jobs:
         with:
           ruby-version: '2.7'
           bundler-cache: true
-      - name: StandardRb
-        run: bundle exec standardrb
+      - name: rake fmt
+        run: bundle exec rake fmt
