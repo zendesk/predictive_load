@@ -23,6 +23,7 @@ module PredictiveLoad
       association_name = association.reflection.name
 
       if all_records_will_likely_load_association?(association_name) && supports_preload?(association)
+        PredictiveLoad.callback&.call(record, association)
         preload(association_name)
       end
     end

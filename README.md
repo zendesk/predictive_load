@@ -41,6 +41,28 @@ Some things cannot be preloaded, use `predictive_load: false`
 has_many :foos, predictive_load: false
 ```
 
+### Instrumentation
+
+The library can be instrumented by providing a callback, to be invoked every time automatic preloading happens. The callback must be a callable that receives two arguments:
+* The record (instance) on which the queries that triggered automatic preloading are being performed, in the form of some association call.
+* The association object, which can be inspected to check the type and name of the association.
+
+For example, the callback could be used to emit some metrics:
+
+```ruby
+require "active_support/core_ext/string"
+
+PredictiveLoad.callback = -> (record, association) do
+  METRICS_CLIENT.increment_counter(
+    "active_record.automatic_preloads",
+    tags: [
+      "model:#{record.class.name.underscore}",
+      "association:#{association.reflection.name}"
+    ]
+  )
+end
+```
+
 #### Known limitations:
 
 * Calling association#size will trigger an N+1 on SELECT COUNT(*). Work around by calling #length, loading all records.
