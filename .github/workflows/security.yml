@@ -12,9 +12,9 @@ jobs:
           - gemfiles/rails6.1.gemfile
           - gemfiles/rails7.0.gemfile
     steps:
-    - uses: zendesk/checkout@v3
+    - uses: zendesk/checkout@v4
     - uses: zendesk/setup-ruby@v1
       with:
-        ruby-version: 2.7
+        ruby-version: 3.1
     - name: Checking ${{ matrix.gemfile }}
       run: ./script/bundle-audit ${{ matrix.gemfile }}
