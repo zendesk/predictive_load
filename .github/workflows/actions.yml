@@ -20,6 +20,7 @@ jobs:
           - gemfiles/rails6.0.gemfile
           - gemfiles/rails6.1.gemfile
           - gemfiles/rails7.0.gemfile
+          - gemfiles/rails7.1.gemfile
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:

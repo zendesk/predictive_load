@@ -49,7 +49,8 @@ GEM
     rainbow (3.1.1)
     rake (13.0.6)
     regexp_parser (2.8.1)
-    rexml (3.2.6)
+    rexml (3.3.1)
+      strscan
     rubocop (1.56.2)
       base64 (~> 0.1.1)
       json (~> 2.3)
@@ -82,6 +83,7 @@ GEM
     standard-performance (1.2.0)
       lint_roller (~> 1.1)
       rubocop-performance (~> 1.19.0)
+    strscan (3.1.0)
     thread_safe (0.3.6)
     tzinfo (1.2.11)
       thread_safe (~> 0.1)
