@@ -18,7 +18,6 @@ ActiveRecord::Base.establish_connection(
   adapter: "sqlite3",
   database: ":memory:"
 )
-ActiveRecord::Base.default_timezone = :utc
 require_relative "schema"
 require_relative "models"
 
