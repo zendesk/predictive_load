@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
 
   gem.files = `git ls-files lib README.md LICENSE`.split($\)
   gem.name = "predictive_load"
-  gem.version = "0.8.0"
+  gem.version = "0.9.0"
 
   gem.add_runtime_dependency "activerecord", ">= 6.0", "< 7.2"
   gem.required_ruby_version = ">= 2.7"
