@@ -1,11 +1,6 @@
 name: Continuous Integration
-on:
-  pull_request:
-    branches:
-      - master
-  push:
-    branches:
-      - master
+on: push
+
 jobs:
   specs:
     runs-on: ubuntu-latest
