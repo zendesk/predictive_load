@@ -8,13 +8,11 @@ jobs:
       fail-fast: false
       matrix:
         gemfile:
-          - gemfiles/rails6.0.gemfile
-          - gemfiles/rails6.1.gemfile
           - gemfiles/rails7.0.gemfile
     steps:
-    - uses: zendesk/checkout@v4
-    - uses: zendesk/setup-ruby@v1
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1
+        ruby-version: '3.3'
     - name: Checking ${{ matrix.gemfile }}
       run: ./script/bundle-audit ${{ matrix.gemfile }}

@@ -1,11 +1,7 @@
 module PredictiveLoad::ActiveRecordCollectionObservation
   def self.included(base)
     ActiveRecord::Relation.class_attribute :collection_observer
-    if ActiveRecord::VERSION::MAJOR >= 5
-      ActiveRecord::Relation.prepend Rails5RelationObservation
-    else
-      ActiveRecord::Relation.prepend Rails4RelationObservation
-    end
+    ActiveRecord::Relation.prepend Rails5RelationObservation
     ActiveRecord::Base.include CollectionMember
     ActiveRecord::Base.extend UnscopedTracker
     ActiveRecord::Associations::Association.prepend AssociationNotification
@@ -16,18 +12,6 @@ module PredictiveLoad::ActiveRecordCollectionObservation
     # this essentially intercepts the enumerable methods that would result in n+1s since most of
     # those are delegated to :records in Rails 5+ in the ActiveRecord::Relation::Delegation module
     def records
-      record_array = super
-      if record_array.size > 1 && collection_observer
-        collection_observer.observe(record_array.dup)
-      end
-      record_array
-    end
-  end
-
-  module Rails4RelationObservation
-    # this essentially intercepts the enumerable methods that would result in n+1s since most of
-    # those are delegated to :to_a in Rails 5+ in the ActiveRecord::Relation::Delegation module
-    def to_a
       record_array = super
       if record_array.size > 1 && collection_observer
         collection_observer.observe(record_array.dup)

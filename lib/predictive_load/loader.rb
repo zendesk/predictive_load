@@ -67,16 +67,9 @@ module PredictiveLoad
     # any preloading.
     #
     # Fix is pretty simple, ignore any record with association already loaded.
-    if ActiveRecord::VERSION::MAJOR >= 7
-      def preload(association_name)
-        rs = records_with_association(association_name).reject { |r| r.association(association_name).loaded? }
-        ActiveRecord::Associations::Preloader.new(records: rs, associations: [association_name]).call
-      end
-    else
-      def preload(association_name)
-        rs = records_with_association(association_name).reject { |r| r.association(association_name).loaded? }
-        ActiveRecord::Associations::Preloader.new.preload(rs, [association_name])
-      end
+    def preload(association_name)
+      rs = records_with_association(association_name).reject { |r| r.association(association_name).loaded? }
+      ActiveRecord::Associations::Preloader.new(records: rs, associations: [association_name]).call
     end
 
     def records_with_association(association_name)
