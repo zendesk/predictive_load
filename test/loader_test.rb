@@ -254,13 +254,11 @@ describe PredictiveLoad::Loader do
       it "preloads polymorphic" do
         users = User.all.to_a
 
-        if ActiveRecord::VERSION::MAJOR >= 5
-          # Rails 5 produces this query:
-          # (SELECT * FROM sqlite_master UNION ALL
-          # SELECT * FROM sqlite_temp_master)
-          # WHERE type='table' and name='attachments' ;
-          Attachment.count
-        end
+        # Rails 5 produces this query:
+        # (SELECT * FROM sqlite_master UNION ALL
+        # SELECT * FROM sqlite_temp_master)
+        # WHERE type='table' and name='attachments' ;
+        Attachment.count
 
         assert_equal 2, users.size
         assert_queries(1) do

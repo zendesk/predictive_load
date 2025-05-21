@@ -1,1 +1,3 @@
 test/db
+
+gemfiles/rails_main*.lock
