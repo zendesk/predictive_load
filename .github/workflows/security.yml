@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         gemfile:
-          - gemfiles/rails7.0.gemfile
+          - gemfiles/rails7.1.gemfile
     steps:
     - uses: actions/checkout@v4
     - uses: ruby/setup-ruby@v1

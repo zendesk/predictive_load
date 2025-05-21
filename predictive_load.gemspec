@@ -12,6 +12,6 @@ Gem::Specification.new do |gem|
   gem.name = "predictive_load"
   gem.version = PredictiveLoad::VERSION
 
-  gem.add_runtime_dependency "activerecord", ">= 7.0"
+  gem.add_runtime_dependency "activerecord", ">= 7.1"
   gem.required_ruby_version = ">= 3.3"
 end

@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     predictive_load (0.10.0)
-      activerecord (>= 7.0)
+      activerecord (>= 7.1)
 
 GEM
   remote: https://rubygems.org/
