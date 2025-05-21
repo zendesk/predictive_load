@@ -4,7 +4,7 @@ require "rake/testtask"
 require "bump/tasks"
 
 # Pushing to rubygems is handled by a github workflow
-ENV['gem_push'] = 'false'
+ENV["gem_push"] = "false"
 
 desc "Format code"
 task :fmt do
