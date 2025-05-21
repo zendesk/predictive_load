@@ -1,11 +1,12 @@
 require:
-- standard
+  - standard
+
+plugins:
+  - standard-custom
+  - standard-performance
+  - rubocop-performance
 
 inherit_gem:
   standard: config/base.yml
-
-AllCops:
-  SuggestExtensions: false
-  TargetRubyVersion: 2.7
-  Exclude:
-  - vendor/**/*
+  standard-custom: config/base.yml
+  standard-performance: config/base.yml

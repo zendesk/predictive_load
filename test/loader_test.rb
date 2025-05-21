@@ -20,7 +20,7 @@ describe PredictiveLoad::Loader do
       topic.comments.create!(body: "meow", user: user1)
       topic.comments.create!(body: "Ho Ho ho", user: user2)
       # anticipate queries to cache foreign_key definitions
-      Attachment.create(source_id: 0, source_type: '0').then(&:destroy)
+      Attachment.create(source_id: 0, source_type: "0").then(&:destroy)
       Photo.create(user_id: 0).then(&:destroy)
     end
 

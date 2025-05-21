@@ -46,7 +46,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
           bundler-cache: true
-      - name: rake fmt
-        run: bundle exec rake fmt
+      - run: bundle exec rubocop

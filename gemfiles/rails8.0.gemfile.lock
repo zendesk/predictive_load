@@ -118,7 +118,7 @@ DEPENDENCIES
   query_diet
   rake
   sqlite3 (>= 2.0)
-  standard
+  standard (~> 1.50.0)
 
 BUNDLED WITH
    2.6.9
