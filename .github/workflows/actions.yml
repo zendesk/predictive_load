@@ -14,8 +14,6 @@ jobs:
           - gemfiles/rails7.1.gemfile
           - gemfiles/rails7.2.gemfile
           - gemfiles/rails8.0.gemfile
-        include:
-          - {ruby: '3.3', gemfile: 'gemfiles/rails7.0.gemfile'}
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:
@@ -26,6 +24,22 @@ jobs:
           bundler-cache: true
       - name: rake test
         run: bundle exec rake test
+
+  specs_successful:
+    name: Specs passing?
+    needs: specs
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          if ${{ needs.specs.result == 'success' }}
+          then
+            echo "All specs pass"
+          else
+            echo "Some specs failed"
+            false
+          fi
+
   validate:
     runs-on: ubuntu-latest
     steps:
