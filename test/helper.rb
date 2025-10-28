@@ -7,6 +7,7 @@ require "active_record/associations/builder/belongs_to" # pretend we loaded this
 require "predictive_load"
 require "predictive_load/active_record_collection_observation"
 require "benchmark"
+require "query_diet/benchmark"
 require "query_diet/logger"
 require "query_diet/active_record_ext"
 require "pry-byebug"
