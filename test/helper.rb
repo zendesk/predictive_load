@@ -10,6 +10,7 @@ require "benchmark"
 require "query_diet/benchmark"
 require "query_diet/logger"
 require "query_diet/active_record_ext"
+require_relative "query_diet_patch"
 require "pry-byebug"
 
 ActiveRecord::Base.class_eval do
