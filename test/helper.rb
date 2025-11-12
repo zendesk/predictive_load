@@ -10,6 +10,7 @@ require "benchmark"
 require "query_diet/benchmark"
 require "query_diet/logger"
 require "query_diet/active_record_ext"
+require_relative "query_diet_patch"
 require "pry-byebug"
 
 ActiveRecord::Base.class_eval do
@@ -27,6 +28,6 @@ def assert_queries(num = 1)
   old = QueryDiet::Logger.queries.dup
   result = yield
   new = QueryDiet::Logger.queries[old.size..]
-  assert_equal num, new.size, "#{new.size} instead of #{num} queries were executed.#{(new.size == 0) ? "" : "\nQueries:\n#{new.map(&:first).join("\n")}"}"
+  assert_equal num, new.size, "#{new.size} instead of #{num} queries were executed.#{"\nQueries:\n#{new.map(&:first).join("\n")}" unless new.size == 0}"
   result
 end
