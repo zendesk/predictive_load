@@ -5,7 +5,7 @@ require "bump/tasks"
 
 desc "Format code"
 task :fmt do
-  sh "rubocop --auto-correct"
+  sh "rubocop --autocorrect"
 end
 
 Rake::TestTask.new(:test) do |test|
