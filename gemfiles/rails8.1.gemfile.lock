@@ -62,7 +62,6 @@ GEM
     pry-byebug (3.12.0)
       byebug (~> 13.0)
       pry (>= 0.13, < 0.17)
-    query_diet (0.7.3)
     racc (1.8.1)
     rainbow (3.1.1)
     rake (13.4.2)
@@ -121,7 +120,6 @@ DEPENDENCIES
   minitest-rg
   predictive_load!
   pry-byebug
-  query_diet
   rake
   sqlite3 (>= 2.1)
   standard (~> 1.51.0)
@@ -156,7 +154,6 @@ CHECKSUMS
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
   pry (0.16.0) sha256=d76c69065698ed1f85e717bd33d7942c38a50868f6b0673c636192b3d1b6054e
   pry-byebug (3.12.0) sha256=594e094ae8a8390a7ad4c7b36ae36e13304ed02664c67417d108dc5f7213d1b7
-  query_diet (0.7.3) sha256=9a9efdc88ec6920f7b71fa47055c1ead1e6aac265bbf9dc8f77e0dadb1afb9aa
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701

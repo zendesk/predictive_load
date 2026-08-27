@@ -6,11 +6,6 @@ require "active_support/all"
 require "active_record/associations/builder/belongs_to" # pretend we loaded this first to test initializer
 require "predictive_load"
 require "predictive_load/active_record_collection_observation"
-require "benchmark"
-require "query_diet/benchmark"
-require "query_diet/logger"
-require "query_diet/active_record_ext"
-require_relative "query_diet_patch"
 require "pry-byebug"
 
 ActiveRecord::Base.class_eval do
@@ -24,10 +19,30 @@ ActiveRecord::Base.establish_connection(
 require_relative "schema"
 require_relative "models"
 
-def assert_queries(num = 1)
-  old = QueryDiet::Logger.queries.dup
-  result = yield
-  new = QueryDiet::Logger.queries[old.size..]
-  assert_equal num, new.size, "#{new.size} instead of #{num} queries were executed.#{"\nQueries:\n#{new.map(&:first).join("\n")}" unless new.size == 0}"
+class QueryCounter
+  OPERATIONS = %w[SELECT INSERT UPDATE DELETE]
+
+  attr_reader :queries
+
+  def initialize
+    @queries = []
+  end
+
+  def execute!(&block)
+    ActiveSupport::Notifications.subscribed(subscriber, "sql.active_record", &block)
+  end
+
+  private
+
+  def subscriber
+    ->(*, payload) { @queries << payload[:sql] if OPERATIONS.any? { |op| payload[:sql].lstrip.start_with?(op) } }
+  end
+end
+
+def assert_queries(num = 1, &block)
+  counter = QueryCounter.new
+  result = counter.execute!(&block)
+  queries = counter.queries
+  assert_equal num, queries.size, "#{queries.size} instead of #{num} queries were executed.#{"\nQueries:\n#{queries.join("\n")}" unless queries.empty?}"
   result
 end
