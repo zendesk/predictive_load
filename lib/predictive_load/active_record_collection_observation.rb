@@ -1,14 +1,14 @@
 module PredictiveLoad::ActiveRecordCollectionObservation
   def self.included(base)
     ActiveRecord::Relation.class_attribute :collection_observer
-    ActiveRecord::Relation.prepend Rails5RelationObservation
+    ActiveRecord::Relation.prepend RelationObservation
     ActiveRecord::Base.include CollectionMember
     ActiveRecord::Base.extend UnscopedTracker
     ActiveRecord::Associations::Association.prepend AssociationNotification
     ActiveRecord::Associations::CollectionAssociation.prepend CollectionAssociationNotification
   end
 
-  module Rails5RelationObservation
+  module RelationObservation
     # this essentially intercepts the enumerable methods that would result in n+1s since most of
     # those are delegated to :records in Rails 5+ in the ActiveRecord::Relation::Delegation module
     def records
